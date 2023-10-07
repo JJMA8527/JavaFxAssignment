@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
@@ -49,8 +50,12 @@ public class Main extends Application {
 	    	    
 	    	    Button save = new Button("Save Project");
 	    	    Button cancel = new Button("Cancel");
+	    	    //horizontal buttons
+	    	    HBox hbox = new HBox(20);
+	    	    hbox.setAlignment(Pos.CENTER);
 	    	    
-	    		vbox.getChildren().addAll(title,projName,dateSelect,date,description,descrip,save,cancel);
+	    	    hbox.getChildren().addAll(cancel,save);
+	    		vbox.getChildren().addAll(title,projName,dateSelect,date,description,descrip,hbox);
 	    		primaryStage.setTitle("Project Page");
 	    		primaryStage.setScene(projScene);
 	    		primaryStage.show();
