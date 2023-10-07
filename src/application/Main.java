@@ -23,7 +23,7 @@ public class Main extends Application {
 		try {
 			BorderPane root = new BorderPane();
 			Scene scene = new Scene(root,1000,700);
-			//home page
+			//set title for home page
 			primaryStage.setTitle("Home Page");
 	        Label homeLabel = new Label("Welcome to the Home Page");
 	        BorderPane.setAlignment(homeLabel, Pos.CENTER);
@@ -31,37 +31,47 @@ public class Main extends Application {
 	        root.setTop(homeLabel);
 	        root.setCenter(newProject);
 	        
+	        //action performed when newProject button is clicked
 	        newProject.setOnAction(event -> {
+	        	//setup vbox layout for project form
 	    		VBox vbox = new VBox(20);
 	    		Scene projScene = new Scene(vbox,1000,700);
 	    		vbox.setAlignment(Pos.TOP_LEFT);
 	    		
+	    		//components for project form: projName, date, descrip, save/cancel
 	    		Label title = new Label("Enter Project Name: ");
 	    		TextField projName = new TextField();
 	    		projName.setPromptText("Project name");
 	    	    projName.setMaxWidth(500);
-	    	    //date
+	    	    
+	    	    //date selection for project date. set to current date but can be modified
 	    	    Label dateSelect = new Label("Project's Starting Date");
 	    	    DatePicker date = new DatePicker(LocalDate.now());
 	    	    
+	    	    //text area for project description
 	    	    Label description = new Label("Description");
 	    	    TextArea descrip = new TextArea();
 	    	    descrip.setPromptText("Optional");
 	    	    
 	    	    Button save = new Button("Save Project");
 	    	    Button cancel = new Button("Cancel");
-	    	    //horizontal buttons
+	    	    
+	    	    //horizontal layout for save/cancel buttons
 	    	    HBox hbox = new HBox(20);
 	    	    hbox.setAlignment(Pos.CENTER);
 	    	    
+	    	    //align components to hbox layout
 	    	    hbox.getChildren().addAll(cancel,save);
+	    	    //align components to vbox layout
 	    		vbox.getChildren().addAll(title,projName,dateSelect,date,description,descrip,hbox);
+	    		
+	    		//Set title and display project page
 	    		primaryStage.setTitle("Project Page");
 	    		primaryStage.setScene(projScene);
 	    		primaryStage.show();
 	        });
 
-
+	        //display home page
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
