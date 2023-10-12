@@ -20,5 +20,14 @@ public class ProjectViewTable {
 		display.setScene(null);
 	}
 	
+	private void createTable() {
+		TableColumn<Project,String>nameCol = new TableColumn<>("Project Name");
+		TableColumn<Project,String>dateCol = new TableColumn<>("Date");
+		TableColumn<Project,String>descriptionCol = new TableColumn<>("Description");
+		
+		
+		
+	}
+	
 	
 }

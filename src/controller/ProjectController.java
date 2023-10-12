@@ -48,10 +48,7 @@ public class ProjectController {
         saveButton.setOnAction(event -> save(projName.getText(), date.getValue(), descrip.getText()));
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(event -> {
-        	clear(); 
-        	projectStage.setScene(prevScene); //takes user back to home window
-        });
+        cancelButton.setOnAction(event -> cancel()); 
         
 	    //horizontal layout for save/cancel buttons
 	    HBox hbox = new HBox(20);
