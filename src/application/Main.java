@@ -1,6 +1,7 @@
 package application;
 	
 import controller.ProjectController;
+import controller.SQLController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 
 
@@ -25,8 +27,16 @@ public class Main extends Application {
 	        Button newProject = new Button("Create a new project");
 	        Button displayProjects = new Button("Display Projects");
 	        root.setTop(homeLabel);
-	        root.setCenter(newProject);
-	        root.setCenter(displayProjects);
+
+	        VBox menu = new VBox(40); 
+	        menu.getChildren().addAll(newProject, displayProjects);
+	        menu.setAlignment(Pos.CENTER);
+
+	        SQLController controller = new SQLController();
+	        controller.createProjectsTable();
+	        
+	        root.setCenter(menu);
+
 	        
 	        //action performed when newProject button is clicked
 	        newProject.setOnAction(event -> {

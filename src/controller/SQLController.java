@@ -1,5 +1,10 @@
+/* Manage database interactions for the application. Establishes connection to database, creates a table, insert
+ * entities into table, and defines a method to retrieve list of items. 
+ * 
+ */
 package controller;
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,32 +13,50 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import application.Project;
+
 public class SQLController {
-	
+	// Establishes connection to database and returns connection object
 	private Connection connect() {
 		Connection conn = null;
 	    try {
-	        conn = DriverManager.getConnection("jdbc:sqlite:projects.db");
+	        conn = DriverManager.getConnection("jdbc:sqlite:bugtracker.db");
 	    } catch (SQLException e) {
 	        System.out.println(e.getMessage());
 	    }
 	    return conn;
 	}
-	
+	// Inserts new Project object into the projects table in database
 	public void insertProject(Project proj) {
 		//sql INSERT INTO statement. create a table projects. project info into columns
-		String sql = "INSERT INTO projects(name,data,description) VALUES(?,?,?)";
+		String sql = "INSERT INTO projects(name,date,description) VALUES(?,?,?)";
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-               pstmt.setString(1, project.getName());
-               pstmt.setString(2, project.getDate().toString());
-               pstmt.setString(3, project.getDescription());
+               pstmt.setString(1, proj.getName());
+               pstmt.setString(2, proj.getDate().toString());
+               pstmt.setString(3, proj.getDescription());
                pstmt.executeUpdate();
            } catch (SQLException e) {
                System.out.println(e.getMessage());
            }
 	}
-	
+	//Creates projects table if it doesn't already exists. Checks for connection
+	public void createProjectsTable() {
+	    String sql = "CREATE TABLE IF NOT EXISTS projects (\n"
+	            + " id integer PRIMARY KEY,\n"
+	            + " name text NOT NULL,\n"
+	            + " date text,\n"   
+	            + " description text\n"
+	            + ");";
+
+	    try (Connection conn = this.connect();
+	            Statement stmt = conn.createStatement()) {
+	        stmt.execute(sql);
+	    } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    }
+	}
+	//Retrieves all projects from table in database
 	public ArrayList<Project>getProjects(){
 		//select all
 		String sql = "Select * FROM projects";
@@ -46,7 +69,10 @@ public class SQLController {
            while (rs.next()) {
         	   String name = rs.getString("name");
         	   LocalDate date = LocalDate.parse(rs.getString("date"));
-        	   String description = rs.getString(description);
+        	   String description = rs.getString("description");
+        	   
+        	    Project project = new Project(name, date, description);
+        	    projects.add(project);
            }
        } catch (SQLException e) {
            System.out.println(e.getMessage());
@@ -54,8 +80,5 @@ public class SQLController {
 		
 		return projects;
 	}
-	
-	
-
     
 }
