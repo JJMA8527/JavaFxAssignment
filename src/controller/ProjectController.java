@@ -26,6 +26,7 @@ public class ProjectController {
 	private TextField projName;
 	private DatePicker date;
 	private TextArea descript;
+	private Label projNameError;
 	
 	public ProjectController(Stage primaryStage, Scene homeScene) {
 		prevScene = homeScene;
@@ -34,19 +35,27 @@ public class ProjectController {
 	}
 /* Configure a form where user can add a project by entering a name, modifying the date either by clicking on the calendar
  * or just manually entering the date, and adding a description. When user saves the submission, the form will clear the fields
- * after successfully saving.
+ * after successfully saving so user doesn't have to manually clear the fields to enter a new project.
  * Otherwise, if user does not want to do anything, the cancel
  * button will take them back to the home page.
  * 	
  */
 	public void projectCreationForm() {
-        VBox vbox = new VBox(20);
+        VBox vbox = new VBox(20); //spacing for the entire form
+        VBox nameBox = new VBox(5); //spacing for the name field and error message
         Scene projScene = new Scene(vbox, 1000, 700);
+        projScene.getStylesheets().add(getClass().getResource("/message.css").toExternalForm());
         vbox.setAlignment(Pos.TOP_LEFT);
         projectStage.setTitle("Project Form");
 
         Label title = new Label("Enter Project Name: ");
         projName = new TextField();
+        
+        //Set the field as required. If user hasn't filled in field, error message becomes visible
+        projNameError = new Label("Required");
+        projNameError.setVisible(false);
+        projNameError.getStyleClass().add("error-label");
+
         projName.setPromptText("Project name");
         projName.setMaxWidth(500);
 
@@ -67,8 +76,9 @@ public class ProjectController {
 	    HBox hbox = new HBox(20);
 	    hbox.setAlignment(Pos.CENTER);
 	    
+	    nameBox.getChildren().addAll(projName,projNameError);
 	    hbox.getChildren().addAll(cancelButton,saveButton);
-        vbox.getChildren().addAll(title, projName, dateSelect, date, description, descript, hbox);
+        vbox.getChildren().addAll(title, nameBox, dateSelect, date, description, descript, hbox);
         projectStage.setScene(projScene);
     }
 
@@ -80,6 +90,25 @@ public class ProjectController {
 
 	private void save(String name, LocalDate projDate, String description) {
 		// TODO Auto-generated method stub
+	    boolean hasErrors = false;
+	    /* If the field is empty, the error message becomes visible. The borders of the box will become
+	     * red, prompting the user to fill in the field. Otherwise, it removes the message once user fills in
+	     * field and saves the project. If user fails to enter the name, the save function does not add the project
+	     * to the database unless user fixes their mistake. 
+	     * 
+	     */
+	    if (name.isEmpty()) {
+	        projName.getStyleClass().add("error-field");
+	        projNameError.setVisible(true);
+	        hasErrors = true;
+	    } else {
+	        projName.getStyleClass().remove("error-field");
+	        projNameError.setVisible(false);
+	    }
+
+	    if (hasErrors) {
+	        return;
+	    }
         Project project = new Project(name, projDate, description);
         sqlControl.insertProject(project);
         
