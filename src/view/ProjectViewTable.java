@@ -2,7 +2,9 @@
  * data along with previous ones. 
  * 
  */
-package model;
+package view;
+
+
 import application.Project;
 import controller.SQLController;
 import javafx.collections.FXCollections;
@@ -26,7 +28,7 @@ public class ProjectViewTable {
 	public void displayProjects() {
 		Stage display = new Stage();
 		display.setTitle("Project List");
-		Scene tableScene = new Scene(table,500,500);
+		Scene tableScene = new Scene(table,1000,700);
 		
 		display.setScene(tableScene);
 		display.show();
@@ -38,7 +40,12 @@ public class ProjectViewTable {
 		TableColumn<Project,String>nameCol = new TableColumn<>("Name");
 		TableColumn<Project,String>dateCol = new TableColumn<>("Date");
 		TableColumn<Project,String>descriptionCol = new TableColumn<>("Description");
-		
+	    TableColumn<Project, Integer> idCol = new TableColumn<>("ID");
+	    nameCol.setPrefWidth(200);
+	    descriptionCol.setPrefWidth(670);
+	    idCol.setCellValueFactory(
+	            new PropertyValueFactory<Project, Integer>("id") 
+	    );
 		nameCol.setCellValueFactory(
 				new PropertyValueFactory<Project,String>("Name")
 				);
@@ -48,12 +55,15 @@ public class ProjectViewTable {
 		descriptionCol.setCellValueFactory(
 				new PropertyValueFactory<Project,String>("Description")
 				);
-		
+		table.getColumns().add(idCol);
         table.getColumns().add(nameCol);
         table.getColumns().add(dateCol);
         table.getColumns().add(descriptionCol);
         ObservableList<Project> projects = FXCollections.observableArrayList(sq.getProjects());
+        
+        
         table.setItems(projects);
+        table.refresh();
     }
 		
 	

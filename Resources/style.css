@@ -1,0 +1,30 @@
+.background {
+	-fx-background-color: MintCream;
+}
+.side_background{
+	-fx-background-color: WhiteSmoke;
+}
+
+.header {
+	-fx-background-color: PaleTurquoise;
+}
+
+/*
+ * For the required fields
+ */
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 1;
+}
+
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+}
+
+/*
+ * Customize font
+ */
+#home_title {
+	
+}

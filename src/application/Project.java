@@ -12,9 +12,18 @@ public class Project {
     private final StringProperty name;
     private final ObjectProperty<LocalDate> date;
     private final StringProperty description;
+    private int id;
 
     // Constructor
     public Project(String name, LocalDate date, String description) {
+        this.name = new SimpleStringProperty(name);
+        this.date = new SimpleObjectProperty<>(date);
+        this.description = new SimpleStringProperty(description);
+    }
+    
+    //Constructor with id
+    public Project(int id,String name, LocalDate date, String description) {
+    	this.id = id;
         this.name = new SimpleStringProperty(name);
         this.date = new SimpleObjectProperty<>(date);
         this.description = new SimpleStringProperty(description);
@@ -57,5 +66,12 @@ public class Project {
 
     public void setDescription(String description) {
         this.description.set(description);
+    }
+    
+    public int getId() {
+        return id;
+    }
+    public void setId(int projectId) {
+        this.id = projectId;
     }
 }
