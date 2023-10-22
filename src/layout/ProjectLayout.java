@@ -39,7 +39,8 @@ public class ProjectLayout implements LayoutInterface {
      * Otherwise, if user does not want to do anything, the cancel
      * button will take them back to the home page.
      * 	
-     */  
+     */
+    @Override
 	public void GenerateForm() {
         VBox nameBox = new VBox(5); //spacing for the name field and error message
 
@@ -79,6 +80,7 @@ public class ProjectLayout implements LayoutInterface {
 	    hbox.getChildren().addAll(cancelButton,saveButton);
         root.getChildren().addAll(title, nameBox, dateSelect, date, description, descript, hbox);
     }
+    @Override
 	public Scene getScene() {
 		return projectScene;
 	}

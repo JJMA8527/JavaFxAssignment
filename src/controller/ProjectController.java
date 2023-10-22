@@ -5,7 +5,8 @@ package controller;
 
 import java.time.LocalDate;
 
-import application.Project;
+import database.ProjectDatabase;
+import entities.Project;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,14 +22,16 @@ import layout.ProjectLayout;
 
 public class ProjectController {
 	private Stage projectStage; //project window
-	private SQLController sqlControl;
+	//private SQLController sqlControl;
+	private ProjectDatabase projdb;
 	private Scene prevScene; //stores the previous window
 	private ProjectLayout projLayout;
 	
 	
 	public ProjectController(Stage primaryStage,Scene homeScene) {
 		prevScene = homeScene;
-		sqlControl = new SQLController();
+		//sqlControl = new SQLController();
+		projdb = new ProjectDatabase();
 		projectStage = primaryStage;
 		projLayout = new ProjectLayout(projectStage,this);
 		
@@ -56,7 +59,8 @@ public class ProjectController {
 
         Project project = new Project(nameField.getText(), dateField.getValue(), descriptionArea.getText());
         //sqlControl.insertProject(project);
-	    int generatedId = sqlControl.insertProject(project);
+	    //int generatedId = sqlControl.insertProject(project);
+	    int generatedId = projdb.insertProject(project);
 	    project.setId(generatedId);
         
         //clears field after saving project
