@@ -3,6 +3,7 @@ package layout;
 import java.time.LocalDate;
 
 import controller.ProjectController;
+import entities.Project;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,14 +25,16 @@ public class ProjectLayout implements LayoutInterface {
 	
 	private Scene projectScene;
 	private VBox root;
-    
+    private Project project;
     public ProjectLayout(Stage projectStage,ProjectController projControl) {
         this.projectStage = projectStage;
         this.projControl = projControl;
         root = new VBox(20);
-        projectScene = new Scene(root, 1000, 700);
+        project = new Project("",LocalDate.now(),"");
         GenerateForm();
     }
+
+
     
     /* Configure a form where user can add a project by entering a name, modifying the date either by clicking on the calendar
      * or just manually entering the date, and adding a description. When user saves the submission, the form will clear the fields
@@ -44,7 +47,8 @@ public class ProjectLayout implements LayoutInterface {
 	public void GenerateForm() {
         VBox nameBox = new VBox(5); //spacing for the name field and error message
 
-        projectScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        //projectScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         root.setAlignment(Pos.TOP_LEFT);
         projectStage.setTitle("Project Form");
 
@@ -66,14 +70,18 @@ public class ProjectLayout implements LayoutInterface {
         descript = new TextArea();
         descript.setPromptText("Optional");
         
-
+        projName.textProperty().bindBidirectional(project.nameProperty());
+        date.valueProperty().bindBidirectional(project.dateProperty());
+        descript.textProperty().bindBidirectional(project.descriptionProperty());
+        
         Button saveButton = new Button("Save");
         saveButton.setOnAction(event -> projControl.save());
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(event -> projControl.cancel()); 
+        cancelButton.setOnAction(event -> projControl.cancel());
+
 	    //horizontal layout for save/cancel buttons
-	    HBox hbox = new HBox(20);
+	    HBox hbox = new HBox(10);
 	    hbox.setAlignment(Pos.CENTER);
 	    
 	    nameBox.getChildren().addAll(projName,projNameError);
@@ -93,13 +101,13 @@ public class ProjectLayout implements LayoutInterface {
 	    return projNameError;
 	}
 
-	public DatePicker getDatePicker() {
-	    return date;
-	}
-
-	public TextArea getDescriptionArea() {
-	    return descript;
-	}
+    public VBox getRoot() {
+        return root;
+    }
+    
+    public Project getProject() {
+    	return project;
+    }
 
     
 }

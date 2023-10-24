@@ -12,68 +12,75 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import layout.CommentLayout;
+import layout.HomeLayout;
 import layout.TicketLayout;
 
 public class TicketController {
-	private Stage ticketStage; //ticket window
-	private SQLController sqlControl;
+	private CommentController commentControl;
 	private TicketDatabase ticdb;
-	private Scene prevScene; //stores the previous window
 	private TicketLayout ticketLayout;
 	private Project project;
+	private Ticket ticket;
+    private HomeLayout homeLayout;
 	
-	public TicketController(Stage primaryStage, Scene homeScene) {
-		prevScene = homeScene;
-		//sqlControl = new SQLController();
+
+	public TicketController(Stage primaryStage, HomeLayout homeLayout) {
+		// TODO Auto-generated constructor stub
+		this.homeLayout = homeLayout;
 		ticdb = new TicketDatabase();
-		ticketStage = primaryStage;
-		ticketLayout = new TicketLayout(ticketStage,this);
+		ticketLayout = new TicketLayout(primaryStage,this);
+		commentControl = new CommentController(primaryStage,homeLayout,ticketLayout);
 	}
 	public void save() {
 		// TODO Auto-generated method stub
+	    Ticket ticket = ticketLayout.getTicket();
 	    project = ticketLayout.getSelectProject().getSelectionModel().getSelectedItem();
 
-	    if (!selectField(ticketLayout.getSelectProject())) {
-	        return;
-	    }
+        if (!selectField(ticketLayout.getSelectProject())) {
+            return;
+        }
+        //error display when user didn't enter required field
+        if (!validField()) {
+            return;
+        }
+        int projectId = project.getId();
+        String ticketName = ticket.getName();
+        LocalDate ticketDate = ticket.getDate();
+        String ticketDescription = ticket.getDescription();
+        String selectedType = ticketLayout.getSelectTicketType().getValue();
 
-	    int projectId = project.getId();
-	    TextField nameField = ticketLayout.getTicketName();
-	    DatePicker dateField = ticketLayout.getDatePicker();
-	    TextArea descriptionArea = ticketLayout.getDescriptionArea();
-	    String selectedType = ticketLayout.getSelectTicketType().getValue();
-	    
-	    if(!validField(nameField)) {
-	    	return;
-	    }
-	    
-        Ticket ticket = new Ticket(nameField.getText(), dateField.getValue(), descriptionArea.getText(),selectedType);
-        ticket.setProjectId(projectId);
-	    //int generatedId = sqlControl.insertTicket(ticket);
-        int generatedId = ticdb.insertTicket(ticket);
-	    ticket.setId(generatedId);
+
+        Ticket newTicket = new Ticket(ticketName, ticketDate, ticketDescription, selectedType);
+        newTicket.setProjectId(projectId);
+        int generatedId = ticdb.insertTicket(newTicket);
+        newTicket.setId(generatedId);
+
+        // clears field after saving project
+        ticket.setName("");
+        ticket.setDate(LocalDate.now());
+        ticket.setDescription("");
+
+	}
+
+    private boolean validField() {
+        boolean isFilled = true;
+        TextField ticketNameField = ticketLayout.getTicketName();
+        Label requiredField = ticketLayout.getTicketNameError();
         
-        //clears field after saving project
-        nameField.clear();
-        dateField.setValue(LocalDate.now());
-        descriptionArea.clear();
-	}
+        // Check if the ticketNameField is empty or null.
+        if (ticketNameField.getText().trim().isEmpty()) {
+            ticketNameField.getStyleClass().add("error-field");
+            requiredField.setText("Required");  // Set the error message.
+            requiredField.setVisible(true);
+            isFilled = false;
+        } else {
+            ticketNameField.getStyleClass().remove("error-field");
+            requiredField.setVisible(false);
+        }
 
-	private boolean validField(TextField nameField) {
-		// TODO Auto-generated method stub
-		boolean isFilled = true;
-	    Label requiredField = ticketLayout.getTicketNameError();
-	    if (nameField.getText().isEmpty()) {
-	        nameField.getStyleClass().add("error-field");
-	        requiredField.setVisible(true);
-	        isFilled = false;
-	    } else {
-	        nameField.getStyleClass().remove("error-field");
-	        requiredField.setVisible(false);
-	    }
-
-	    return isFilled;
-	}
+        return isFilled;
+    }
 	private boolean selectField(ComboBox<Project> project) {
 		boolean isFilled = true;
 		Label requiredSelect = ticketLayout.getProjectErrorLabel();
@@ -87,13 +94,23 @@ public class TicketController {
 		return isFilled;
 	}
 	public void cancel() {
-		// TODO Auto-generated method stub
-        ticketStage.setScene(prevScene); 
-	    ticketStage.setTitle("Home Page");
+		
+		homeLayout.showHomePage();
 	}
 	
 	public void displayTicketForm() {
-		ticketStage.setScene(ticketLayout.getScene());
+		//ticketLayout.GenerateForm();
+	    homeLayout.getRoot().setCenter(ticketLayout.getRoot());
+	}
+	public void viewComments() {
+		// TODO Auto-generated method stub
+		int ticketId = ticket.getId();
+	    commentControl.viewCommentsForTicket(ticketId);
+
+	}
+	public void addComment() {
+		// TODO Auto-generated method stub
+	    commentControl.displayCommentForm();
 	}
 	
 

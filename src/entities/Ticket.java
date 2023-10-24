@@ -15,7 +15,7 @@ public class Ticket {
     private StringProperty description;
     //private HashMap<Integer,Comment>comments;
     private int projectId;
-    private String ticketType;
+    private StringProperty ticketType;
 
     // Constructor with id
     public Ticket(int id,int projectId, String name, LocalDate date, String description,String ticketType) {
@@ -24,7 +24,7 @@ public class Ticket {
         this.name = new SimpleStringProperty(name);
         this.date = new SimpleObjectProperty<>(date);
         this.description = new SimpleStringProperty(description);
-        this.ticketType = ticketType;
+        this.ticketType = new SimpleStringProperty(ticketType);
     }
 
     //Constructor
@@ -33,7 +33,7 @@ public class Ticket {
         this.name = new SimpleStringProperty(name);
         this.date = new SimpleObjectProperty<>(date);
         this.description = new SimpleStringProperty(description);
-        this.ticketType = ticketType;
+        this.ticketType = new SimpleStringProperty(ticketType);
 	}
 
 
@@ -90,11 +90,13 @@ public class Ticket {
     }
     
     public String getTicketType() {
-    	return ticketType;
+        return ticketType.get();
     }
     public void setTicketType(String ticketType) {
-    	this.ticketType = ticketType;
+        this.ticketType.set(ticketType);
     }
     
-    
+    public StringProperty ticketTypeProperty() {
+        return ticketType;
+    }
 }

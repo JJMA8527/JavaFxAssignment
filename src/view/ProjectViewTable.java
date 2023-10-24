@@ -34,19 +34,6 @@ public class ProjectViewTable {
 		createTable();
 	}
 	
-/*	public void displayProjects() {
-		Stage display = new Stage();
-		display.setTitle("Project List");
-		Scene tableScene = new Scene(table,1000,700);
-		
-		display.setScene(tableScene);
-		display.show();
-		
-	}*/
-/*	public TableView<Project> getTableView(){
-		return table;
-	}*/
-	
 	public VBox getTableView() {
 		TextField search = new TextField();
 		search.setPromptText("Search by name");
@@ -104,6 +91,8 @@ public class ProjectViewTable {
         //table.setItems(projects);
         table.refresh();
     }
+
+
 		
 	
 	

@@ -1,7 +1,7 @@
 package layout;
 
+
 import controller.ProjectController;
-import controller.SQLController;
 import controller.TicketController;
 import database.ProjectDatabase;
 import database.TicketDatabase;
@@ -23,6 +23,7 @@ public class HomeLayout implements LayoutInterface {
     private Stage homeStage;
     private Scene homeScene;
     private StackPane centerContainer;
+
     
     public HomeLayout(Stage homeStage) {
     	root = new BorderPane();
@@ -75,13 +76,16 @@ public class HomeLayout implements LayoutInterface {
         homeBtn.setOnAction(event ->{
         	showHomePage();
         });
+        
         //action performed when newProject button is clicked
         newProject.setOnAction(event -> {
-            ProjectController projectControl = new ProjectController(homeStage, homeScene);
+            //ProjectController projectControl = new ProjectController(homeStage, homeScene);
+            ProjectController projectControl = new ProjectController(homeStage,this);
             projectControl.displayProjectForm();
         });
         newTicket.setOnAction(event ->{
-        	TicketController ticketControl = new TicketController(homeStage, homeScene);
+        	//TicketController ticketControl = new TicketController(homeStage, homeScene);
+        	TicketController ticketControl = new TicketController(homeStage, this);
         	ticketControl.displayTicketForm();
         });
         //action opens new window 
@@ -96,6 +100,8 @@ public class HomeLayout implements LayoutInterface {
         	root.setCenter(ticketTable.getTableView());
         	homeStage.setTitle("Display Tickets");
         });
+
+
 	}
 	
 	

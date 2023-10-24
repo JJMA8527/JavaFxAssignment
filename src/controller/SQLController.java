@@ -1,5 +1,4 @@
-/* Manage database interactions for the application. Establishes connection to database, creates a table, insert
- * entities into table, and defines a method to retrieve list of items. 
+/* Manage database interactions for the application. Establishes connection to database. 
  * 
  */
 package controller;

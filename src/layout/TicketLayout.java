@@ -35,13 +35,14 @@ public class TicketLayout implements LayoutInterface {
 	
 	private Scene ticketScene;
 	private VBox root;
-	
+	private Ticket ticket;
 	
     public TicketLayout(Stage ticketStage,TicketController ticketControl) {
         this.ticketStage = ticketStage;
         this.ticketControl = ticketControl;
+        ticket = new Ticket("", LocalDate.now(), "", "Bug");
+
         root = new VBox(20);
-        ticketScene = new Scene(root, 1000, 700);
         GenerateForm();
     }
 
@@ -58,9 +59,10 @@ public class TicketLayout implements LayoutInterface {
 		// TODO Auto-generated method stub
         VBox nameBox = new VBox(5); //spacing for the name field and error message
 
-        ticketScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         root.setAlignment(Pos.TOP_LEFT);
         ticketStage.setTitle("Ticket Form");
+        
         
         Label projectLabel = new Label("Select Project:");
         ComboBox<Project> projectDropdown = ProjectDropdown();
@@ -76,8 +78,6 @@ public class TicketLayout implements LayoutInterface {
         ticketName = new TextField();
         
         ComboBox<String> typeDropdown = TypeDropdown();
-        //selectType.getItems().addAll("Bug", "Enhancement");
-        //selectType.setValue("Bug");
         
         HBox ticketBox = new HBox(50); 
         
@@ -96,7 +96,22 @@ public class TicketLayout implements LayoutInterface {
         descript = new TextArea();
         descript.setPromptText("Optional");
         
-
+        ticketName.textProperty().bindBidirectional(ticket.nameProperty());
+        date.valueProperty().bindBidirectional(ticket.dateProperty());
+        descript.textProperty().bindBidirectional(ticket.descriptionProperty());
+        
+        /*Label viewComments = new Label("View Comments");
+        viewComments.getStyleClass().add("link");
+        viewComments.setOnMouseClicked(event -> ticketControl.viewComments());*/
+        
+        Label addComment = new Label("Add Comment");
+        addComment.getStyleClass().add("link");
+        addComment.setOnMouseClicked(event -> ticketControl.addComment());
+        
+        HBox commentBox = new HBox(10); 
+        commentBox.setAlignment(Pos.CENTER);
+        commentBox.getChildren().addAll(addComment);
+        
         Button saveButton = new Button("Save");
         saveButton.setOnAction(event -> ticketControl.save());
 
@@ -109,26 +124,26 @@ public class TicketLayout implements LayoutInterface {
         ticketBox.getChildren().addAll(ticketName, typeDropdown);
 	    nameBox.getChildren().addAll(ticketBox,ticketNameError);
 	    hbox.getChildren().addAll(cancelButton,saveButton);
-        root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript, hbox);
+        root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript,commentBox, hbox);
 		
 	}
-	
+	//ticket type dropdown
 	private ComboBox<String> TypeDropdown(){
 		selectType = new ComboBox<>();
         selectType.getItems().addAll("Bug", "Enhancement");
         selectType.setValue("Bug");
         return selectType; 
 	}
+	//return the value in combobox for ticket type
 	public ComboBox<String> getSelectTicketType(){
 		return selectType;
 	}
 	
+	//project selection dropdown
 	private ComboBox<Project> ProjectDropdown() {
 		selectProject = new ComboBox<>();
 		selectProject.setPromptText("Select");
-		//SQLController sqlControl = new SQLController();
 		ProjectDatabase projdb = new ProjectDatabase();
-		//ArrayList<Project>projects = sqlControl.getProjects();
 		ArrayList<Project>projects = projdb.getProjects();
 		selectProject.getItems().addAll(projects);
 	    selectProject.setConverter(new StringConverter<Project>() {
@@ -145,9 +160,13 @@ public class TicketLayout implements LayoutInterface {
 	    return selectProject;
 	}
 	
+	//return project user selected
 	public ComboBox<Project> getSelectProject() {
 	    return selectProject;
 	}
+    public VBox getRoot() {
+        return root;
+    }
 	
 	public TextField getTicketName() {
 	    return ticketName;
@@ -160,11 +179,10 @@ public class TicketLayout implements LayoutInterface {
         return selectProjectError;
     }
 
-	public DatePicker getDatePicker() {
-	    return date;
-	}
-
-	public TextArea getDescriptionArea() {
-	    return descript;
+    public Ticket getTicket() {
+        return ticket;
+    }
+	public Stage getTicketStage() {
+	    return ticketStage;
 	}
 }
