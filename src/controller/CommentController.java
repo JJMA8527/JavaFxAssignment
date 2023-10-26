@@ -1,6 +1,7 @@
 package controller;
 
 import entities.Comment;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -15,25 +16,29 @@ public class CommentController {
 	   private TicketLayout ticketLayout;
 	   private TicketController ticketController;
 	
-	public CommentController(Stage primaryStage,HomeLayout homeLayout, TicketLayout ticketLayout) {
+	public CommentController(Stage primaryStage, HomeLayout homeLayout) {
 	    this.homeLayout = homeLayout;
 	    commentLayout = new CommentLayout(primaryStage, this);
-        this.ticketLayout = ticketLayout;
 
 	}
 	public void cancel() {
-	    ticketLayout.getTicketStage().setTitle("Ticket Form");
-        homeLayout.getRoot().setCenter(ticketLayout.getRoot());
+		homeLayout.showHomePage();
+
 	}
 	
 	public void save() {
         //error display when user didn't enter required field
 		Comment comment = commentLayout.getComment();
+		ComboBox selectTicket = commentLayout.getTicket();
+		
+		
         if (!validField()) {
             return;
         }
         
         comment.setDescription("");
+        selectTicket.setValue(null);
+
 	}
 
     private boolean validField() {

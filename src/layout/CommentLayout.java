@@ -1,29 +1,36 @@
 package layout;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import controller.CommentController;
+import database.TicketDatabase;
 import entities.Comment;
+import entities.Ticket;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class CommentLayout implements LayoutInterface {
 	private Stage commentStage;
 	private CommentController commentControl;
 	private TextArea descript;
-
+	
 	private VBox root;
 	private Scene commentScene;
 	private Comment comment;
 	private Label commentDescriptionError;
+	private ComboBox selectTicket;
+	
 	
 	public CommentLayout(Stage commentStage, CommentController commentControl) {
 		// TODO Auto-generated constructor stub
@@ -49,8 +56,16 @@ public class CommentLayout implements LayoutInterface {
 		
 		HBox titleBox = new HBox(20);
 		Label title = new Label("Add Comment");
-		titleBox.setAlignment(Pos.CENTER);
+		//titleBox.setAlignment(Pos.CENTER);
 
+		
+		//ticket box
+		Label selectTicket = new Label("Select Ticket:");
+        ComboBox<Ticket> ticketDropdown = ticketDropdown();
+
+		
+		
+		
         VBox descriptionBox = new VBox(5);
         Label description = new Label("Description");
         descript = new TextArea();
@@ -78,7 +93,7 @@ public class CommentLayout implements LayoutInterface {
         cancelButton.setOnAction(event -> commentControl.cancel());
         
         descriptionBox.getChildren().addAll(descript,commentDescriptionError);
-        titleBox.getChildren().addAll(title);
+        titleBox.getChildren().addAll(/*title,*/ selectTicket, ticketDropdown);
         timeBox.getChildren().addAll(timestamp,timestampField); 
 	    hbox.getChildren().addAll(cancelButton,saveButton);
         root.getChildren().addAll(titleBox,description,descriptionBox,timeBox,hbox);
@@ -106,6 +121,32 @@ public class CommentLayout implements LayoutInterface {
 		// TODO Auto-generated method stub
 		return comment;
 	}
+	
+	//ticket selection dropdown
+		private ComboBox<Ticket> ticketDropdown() {
+			selectTicket = new ComboBox<>();
+			selectTicket.setPromptText("Select");
+			TicketDatabase ticketdb = new TicketDatabase();
+			ArrayList<Ticket>tickets = ticketdb.getTickets();
+			selectTicket.getItems().addAll(tickets);
+		    selectTicket.setConverter(new StringConverter<Ticket>() {
+		        @Override
+		        public String toString(Ticket ticket) {
+		            return ticket.getName();
+		        }
+		        @Override
+		        public Ticket fromString(String string) {
+		            return null;
+		        }
+		    });
+
+		    return selectTicket;
+		}
+		
+		//return ticket user selected
+		public ComboBox<Ticket> getTicket() {
+		    return selectTicket;
+		}
 	
 	
 

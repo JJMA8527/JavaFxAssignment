@@ -3,6 +3,7 @@ package layout;
 
 import controller.ProjectController;
 import controller.TicketController;
+import controller.CommentController;
 import database.ProjectDatabase;
 import database.TicketDatabase;
 import javafx.geometry.Insets;
@@ -58,9 +59,10 @@ public class HomeLayout implements LayoutInterface {
         Button newTicket = new Button("Ticket");
         Button displayProjects = new Button("Project List");
         Button displayTickets = new Button("Ticket List");
+        Button newComment = new Button("Comment");
         
         HBox menu = new HBox(50); 
-        menu.getChildren().addAll(homeBtn,newProject, newTicket);
+        menu.getChildren().addAll(homeBtn,newProject, newTicket, newComment);
         menu.setAlignment(Pos.CENTER);
         menu.getStyleClass().add("header");
         menu.setPrefHeight(50);
@@ -87,6 +89,10 @@ public class HomeLayout implements LayoutInterface {
         	//TicketController ticketControl = new TicketController(homeStage, homeScene);
         	TicketController ticketControl = new TicketController(homeStage, this);
         	ticketControl.displayTicketForm();
+        });
+        newComment.setOnAction(event ->{
+        	CommentController commentControl = new CommentController(homeStage, this);
+        	commentControl.displayCommentForm();
         });
         //action opens new window 
         displayProjects.setOnAction(event ->{

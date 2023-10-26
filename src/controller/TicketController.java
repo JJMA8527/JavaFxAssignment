@@ -30,7 +30,7 @@ public class TicketController {
 		this.homeLayout = homeLayout;
 		ticdb = new TicketDatabase();
 		ticketLayout = new TicketLayout(primaryStage,this);
-		commentControl = new CommentController(primaryStage,homeLayout,ticketLayout);
+		commentControl = new CommentController(primaryStage,homeLayout);
 	}
 	public void save() {
 		// TODO Auto-generated method stub
