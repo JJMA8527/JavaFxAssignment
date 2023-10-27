@@ -26,6 +26,7 @@ public class ProjectLayout implements LayoutInterface {
 	private Scene projectScene;
 	private VBox root;
     private Project project;
+    
     public ProjectLayout(Stage projectStage,ProjectController projControl) {
         this.projectStage = projectStage;
         this.projControl = projControl;

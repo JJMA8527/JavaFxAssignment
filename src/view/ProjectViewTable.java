@@ -5,31 +5,32 @@
 package view;
 
 
-import controller.SQLController;
+
+
+
 import database.ProjectDatabase;
 import entities.Project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+
 
 public class ProjectViewTable {
 	private TableView<Project>table;
-	private SQLController sq;
 	private ProjectDatabase projdb;
 	private ObservableList<Project>projects;
 	private FilteredList<Project> filteredProjects;
 	
 	public ProjectViewTable() {
 		table = new TableView<>();
-		//sq = new SQLController();
 		projdb = new ProjectDatabase();
 		createTable();
 	}
@@ -44,8 +45,6 @@ public class ProjectViewTable {
                 }
                 String lowerCaseFilter = newValue.toLowerCase();
                 if (project.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else if (project.getDescription().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 }
                 return false;
@@ -65,6 +64,7 @@ public class ProjectViewTable {
 		TableColumn<Project,String>dateCol = new TableColumn<>("Date");
 		TableColumn<Project,String>descriptionCol = new TableColumn<>("Description");
 	    TableColumn<Project, Integer> idCol = new TableColumn<>("ID");
+	    TableColumn<Project, Void> actionsCol = new TableColumn<>("Actions");
 	    nameCol.setPrefWidth(200);
 	    descriptionCol.setPrefWidth(375);
 	    idCol.setCellValueFactory(
@@ -79,21 +79,46 @@ public class ProjectViewTable {
 		descriptionCol.setCellValueFactory(
 				new PropertyValueFactory<Project,String>("Description")
 				);
+		actionsCol.setCellFactory(param -> new ActionButton<>(
+			    project -> viewProject(project),
+			    project -> editProject(project),
+			    project -> deleteProject(project)
+			));
+
 		table.getColumns().add(idCol);
         table.getColumns().add(nameCol);
         table.getColumns().add(dateCol);
         table.getColumns().add(descriptionCol);
-        //projects = FXCollections.observableArrayList(sq.getProjects());
+        table.getColumns().add(actionsCol);
         projects = FXCollections.observableArrayList(projdb.getProjects());
         filteredProjects = new FilteredList<>(projects, p -> true);
         table.setItems(filteredProjects);
         table.setPrefSize(700, 700);
         //table.setItems(projects);
-        table.refresh();
+        //table.refresh();
     }
 
+	private void deleteProject(Project project) {
+		// TODO Auto-generated method stub
 
-		
-	
+	}
+
+	private void viewProject(Project project) {
+		// TODO Auto-generated method stub
+	        Alert alert = new Alert(AlertType.INFORMATION);
+	        alert.setTitle("Project Details");
+	        alert.setHeaderText(null);
+	        alert.setContentText("Name: " + project.getName() + "\n" +
+	                             "Date: " + project.getDate() + "\n" +
+	                             "Description: " + project.getDescription());
+	        alert.showAndWait();
+	}
+
+	private void editProject(Project project) {
+		// TODO Auto-generated method stub
+
+	}
+
+
 	
 }

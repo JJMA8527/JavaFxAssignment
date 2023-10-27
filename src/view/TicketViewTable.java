@@ -24,14 +24,12 @@ public class TicketViewTable {
 	//default constructor. no project id needed
 	public TicketViewTable() {
 		table = new TableView<>();
-		//sq = new SQLController();
 		ticdb = new TicketDatabase();
 		createTable();
 	}
 	//constructor with project id. for specific project 
 	public TicketViewTable(int projectId) {
 		table = new TableView<>();
-		//sq = new SQLController();
 		ticdb = new TicketDatabase();
 		this.projectId = projectId;
 		createTable();
@@ -48,9 +46,8 @@ public class TicketViewTable {
                 String lowerCaseFilter = newValue.toLowerCase();
                 if (ticket.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else if (ticket.getDescription().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
+                } 
+
                 return false;
             });
         });
@@ -98,7 +95,6 @@ public class TicketViewTable {
         table.getColumns().add(descriptionCol);
         table.getColumns().add(projectIdCol);
         table.getColumns().add(typeCol);
-        //tickets = FXCollections.observableArrayList(sq.getTickets());
         tickets = FXCollections.observableArrayList(ticdb.getTickets());
         filteredTickets = new FilteredList<>(tickets,p->true);
         table.setPrefSize(700, 700);

@@ -100,17 +100,6 @@ public class TicketLayout implements LayoutInterface {
         date.valueProperty().bindBidirectional(ticket.dateProperty());
         descript.textProperty().bindBidirectional(ticket.descriptionProperty());
         
-        /*Label viewComments = new Label("View Comments");
-        viewComments.getStyleClass().add("link");
-        viewComments.setOnMouseClicked(event -> ticketControl.viewComments());*/
-        
-        Label addComment = new Label("Add Comment");
-        addComment.getStyleClass().add("link");
-        addComment.setOnMouseClicked(event -> ticketControl.addComment());
-        
-        HBox commentBox = new HBox(10); 
-        commentBox.setAlignment(Pos.CENTER);
-        commentBox.getChildren().addAll(addComment);
         
         Button saveButton = new Button("Save");
         saveButton.setOnAction(event -> ticketControl.save());
@@ -124,7 +113,7 @@ public class TicketLayout implements LayoutInterface {
         ticketBox.getChildren().addAll(ticketName, typeDropdown);
 	    nameBox.getChildren().addAll(ticketBox,ticketNameError);
 	    hbox.getChildren().addAll(cancelButton,saveButton);
-        root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript,commentBox, hbox);
+        root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript, hbox);
 		
 	}
 	//ticket type dropdown

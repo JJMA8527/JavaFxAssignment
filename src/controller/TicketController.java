@@ -17,7 +17,6 @@ import layout.HomeLayout;
 import layout.TicketLayout;
 
 public class TicketController {
-	private CommentController commentControl;
 	private TicketDatabase ticdb;
 	private TicketLayout ticketLayout;
 	private Project project;
@@ -30,7 +29,6 @@ public class TicketController {
 		this.homeLayout = homeLayout;
 		ticdb = new TicketDatabase();
 		ticketLayout = new TicketLayout(primaryStage,this);
-		commentControl = new CommentController(primaryStage,homeLayout);
 	}
 	public void save() {
 		// TODO Auto-generated method stub
@@ -40,6 +38,7 @@ public class TicketController {
         if (!selectField(ticketLayout.getSelectProject())) {
             return;
         }
+
         //error display when user didn't enter required field
         if (!validField()) {
             return;
@@ -60,7 +59,6 @@ public class TicketController {
         ticket.setName("");
         ticket.setDate(LocalDate.now());
         ticket.setDescription("");
-
 	}
 
     private boolean validField() {
@@ -99,19 +97,8 @@ public class TicketController {
 	}
 	
 	public void displayTicketForm() {
-		//ticketLayout.GenerateForm();
 	    homeLayout.getRoot().setCenter(ticketLayout.getRoot());
 	}
-	public void viewComments() {
-		// TODO Auto-generated method stub
-		int ticketId = ticket.getId();
-	    commentControl.viewCommentsForTicket(ticketId);
 
-	}
-	public void addComment() {
-		// TODO Auto-generated method stub
-	    commentControl.displayCommentForm();
-	}
-	
 
 }

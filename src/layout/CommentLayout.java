@@ -29,7 +29,7 @@ public class CommentLayout implements LayoutInterface {
 	private Scene commentScene;
 	private Comment comment;
 	private Label commentDescriptionError;
-	private ComboBox selectTicket;
+	private ComboBox<Ticket> selectTicket;
 	
 	
 	public CommentLayout(Stage commentStage, CommentController commentControl) {
@@ -38,7 +38,7 @@ public class CommentLayout implements LayoutInterface {
 		this.commentControl = commentControl;
 	    root = new VBox(20);
 	    comment = new Comment("");
-	    //GenerateForm();
+	    GenerateForm();
 	    
 	}
 
@@ -123,7 +123,7 @@ public class CommentLayout implements LayoutInterface {
 	}
 	
 	//ticket selection dropdown
-		private ComboBox<Ticket> ticketDropdown() {
+	private ComboBox<Ticket> ticketDropdown() {
 			selectTicket = new ComboBox<>();
 			selectTicket.setPromptText("Select");
 			TicketDatabase ticketdb = new TicketDatabase();
