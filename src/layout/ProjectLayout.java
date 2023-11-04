@@ -23,7 +23,6 @@ public class ProjectLayout implements LayoutInterface {
 	private TextArea descript;
 	private Label projNameError;
 	
-	private Scene projectScene;
 	private VBox root;
     private Project project;
     
@@ -89,11 +88,7 @@ public class ProjectLayout implements LayoutInterface {
 	    hbox.getChildren().addAll(cancelButton,saveButton);
         root.getChildren().addAll(title, nameBox, dateSelect, date, description, descript, hbox);
     }
-    @Override
-	public Scene getScene() {
-		return projectScene;
-	}
-	
+
 	public TextField getProjName() {
 	    return projName;
 	}
@@ -101,7 +96,8 @@ public class ProjectLayout implements LayoutInterface {
 	public Label getProjNameError() {
 	    return projNameError;
 	}
-
+	
+	@Override
     public VBox getRoot() {
         return root;
     }

@@ -4,8 +4,9 @@ package layout;
 import controller.ProjectController;
 import controller.TicketController;
 import controller.CommentController;
-import database.ProjectDatabase;
-import database.TicketDatabase;
+import database.CommentDAO;
+import database.ProjectDAO;
+import database.TicketDAO;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,17 +32,7 @@ public class HomeLayout implements LayoutInterface {
     	this.homeStage = homeStage;
     	homeScene = new Scene(root,1000,700);
     	GenerateForm();
-    	configureTable();
     }
-
-	private void configureTable() {
-		// TODO Auto-generated method stub
-        //SQLController controller = new SQLController();
-        ProjectDatabase projdb = new ProjectDatabase();
-        TicketDatabase tickdb = new TicketDatabase();
-        projdb.createProjectsTable();
-        tickdb.createTicketsTable();
-	}
 
 	public void GenerateForm() {
 		// TODO Auto-generated method stub
@@ -81,12 +72,10 @@ public class HomeLayout implements LayoutInterface {
         
         //action performed when newProject button is clicked
         newProject.setOnAction(event -> {
-            //ProjectController projectControl = new ProjectController(homeStage, homeScene);
             ProjectController projectControl = new ProjectController(homeStage,this);
             projectControl.displayProjectForm();
         });
         newTicket.setOnAction(event ->{
-        	//TicketController ticketControl = new TicketController(homeStage, homeScene);
         	TicketController ticketControl = new TicketController(homeStage, this);
         	ticketControl.displayTicketForm();
         });
@@ -110,7 +99,7 @@ public class HomeLayout implements LayoutInterface {
 
 	}
 	
-	
+	@Override
 	public BorderPane getRoot() {
 		return root;
 	}

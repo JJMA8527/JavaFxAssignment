@@ -1,8 +1,8 @@
 package layout;
 
-import javafx.scene.Scene;
+import javafx.scene.Node;
 
 public interface LayoutInterface {
-	public Scene getScene();
+	public Node getRoot();
 	void GenerateForm();
 }

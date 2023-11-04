@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import controller.ProjectController;
-import controller.SQLController;
 import controller.TicketController;
-import database.ProjectDatabase;
+import database.DatabaseConnector;
+import database.ProjectDAO;
 import entities.Project;
 import entities.Ticket;
 import javafx.geometry.Pos;
@@ -33,7 +33,6 @@ public class TicketLayout implements LayoutInterface {
 	private ComboBox<String> selectType;
 	private Label selectProjectError;
 	
-	private Scene ticketScene;
 	private VBox root;
 	private Ticket ticket;
 	
@@ -45,14 +44,6 @@ public class TicketLayout implements LayoutInterface {
         root = new VBox(20);
         GenerateForm();
     }
-
-
-	@Override
-	public Scene getScene() {
-		// TODO Auto-generated method stub
-		return ticketScene;
-	}
-
 
 	@Override
 	public void GenerateForm() {
@@ -132,8 +123,8 @@ public class TicketLayout implements LayoutInterface {
 	private ComboBox<Project> ProjectDropdown() {
 		selectProject = new ComboBox<>();
 		selectProject.setPromptText("Select");
-		ProjectDatabase projdb = new ProjectDatabase();
-		ArrayList<Project>projects = projdb.getProjects();
+		ProjectDAO projdb = new ProjectDAO();
+		ArrayList<Project>projects = projdb.getAll();
 		selectProject.getItems().addAll(projects);
 	    selectProject.setConverter(new StringConverter<Project>() {
 	        @Override
@@ -153,6 +144,8 @@ public class TicketLayout implements LayoutInterface {
 	public ComboBox<Project> getSelectProject() {
 	    return selectProject;
 	}
+	
+	@Override
     public VBox getRoot() {
         return root;
     }
@@ -160,7 +153,7 @@ public class TicketLayout implements LayoutInterface {
 	public TextField getTicketName() {
 	    return ticketName;
 	}
-
+	
 	public Label getTicketNameError() {
 	    return ticketNameError;
 	}
@@ -171,7 +164,5 @@ public class TicketLayout implements LayoutInterface {
     public Ticket getTicket() {
         return ticket;
     }
-	public Stage getTicketStage() {
-	    return ticketStage;
-	}
+
 }

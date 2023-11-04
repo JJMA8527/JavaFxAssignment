@@ -6,7 +6,7 @@ package controller;
 
 import java.time.LocalDate;
 
-import database.ProjectDatabase;
+import database.ProjectDAO;
 import entities.Project;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,23 +23,19 @@ import layout.HomeLayout;
 import layout.ProjectLayout;
 
 
-public class ProjectController {
-	private ProjectDatabase projdb;
+public class ProjectController extends AbstractController {
+	private ProjectDAO projdb;
 	private ProjectLayout projLayout;
-    private HomeLayout homeLayout;
 	
 
 	public ProjectController(Stage primaryStage,HomeLayout homeLayout) {
 		// TODO Auto-generated constructor stub
 		this.homeLayout = homeLayout;
-		projdb = new ProjectDatabase();
+		projdb = new ProjectDAO();
 		projLayout = new ProjectLayout(primaryStage, this);
 	}
 
-	public void cancel() {
-		homeLayout.showHomePage();
-
-	}
+	
     /* If the field is empty, the error message becomes visible. The borders of the box will become
      * red, prompting the user to fill in the field. Otherwise, it removes the message once user fills in
      * field and saves the project. If user fails to enter the name, the save function does not add the project
@@ -47,22 +43,17 @@ public class ProjectController {
      * Otherwise, the system saves the project info into the database and clears the fields so the user can enter
      * next project if needed.
      */
+	
+	@Override
 	public void save() {
 		Project project = projLayout.getProject();
 
-
         if (!validField()) {
-            // handle error, for example:
             return;
         }
-
-		String projName = project.getName();
-		LocalDate projDate = project.getDate();
-		String projDescription = project.getDescription();
-		
-		Project newProject = new Project(projName,projDate,projDescription);
-	    int generatedId = projdb.insertProject(newProject);
-	    newProject.setId(generatedId);
+        
+        int generatedId = projdb.insert(project);
+        project.setId(generatedId);
 	    
 	    //clear fields
 	    project.setName("");
@@ -70,25 +61,12 @@ public class ProjectController {
 	    project.setDescription("");
         
 	}
-	
-    private boolean validField() {
-        boolean isFilled = true;
-        TextField projNameField = projLayout.getProjName();
-        Label requiredField = projLayout.getProjNameError();
-        
-        // Check if the ticketNameField is empty or null.
-        if (projNameField.getText().trim().isEmpty()) {
-            projNameField.getStyleClass().add("error-field");
-            requiredField.setText("Required");  // Set the error message.
-            requiredField.setVisible(true);
-            isFilled = false;
-        } else {
-            projNameField.getStyleClass().remove("error-field");
-            requiredField.setVisible(false);
-        }
 
-        return isFilled;
-    }
+	protected boolean validField() {
+		TextField projNameField = projLayout.getProjName();
+		Label requiredField = projLayout.getProjNameError();
+		return validField(projNameField,requiredField);
+	}
 	
 	public void displayProjectForm() {
         homeLayout.getRoot().setCenter(projLayout.getRoot());

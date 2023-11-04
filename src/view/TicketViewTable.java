@@ -1,7 +1,8 @@
 package view;
 
-import controller.SQLController;
-import database.TicketDatabase;
+
+
+import database.TicketDAO;
 import entities.Ticket;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,64 +16,64 @@ import javafx.scene.layout.VBox;
 
 public class TicketViewTable {
 	private TableView<Ticket>table;
-	//private SQLController sq;
-	private TicketDatabase ticdb;
+	private TicketDAO ticdb;
 	private int projectId;
 	private ObservableList<Ticket>tickets;
 	private FilteredList<Ticket> filteredTickets;
-	
+
 	//default constructor. no project id needed
 	public TicketViewTable() {
 		table = new TableView<>();
-		ticdb = new TicketDatabase();
-		createTable();
+		ticdb = new TicketDAO();
+		initializeTable();
 	}
 	//constructor with project id. for specific project 
 	public TicketViewTable(int projectId) {
 		table = new TableView<>();
-		ticdb = new TicketDatabase();
+		ticdb = new TicketDAO();
 		this.projectId = projectId;
-		createTable();
+		initializeTable();
 	}
-	
+
 	public VBox getTableView() {
 		TextField search = new TextField();
 		search.setPromptText("Search by name");
-        search.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredTickets.setPredicate(ticket -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (ticket.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } 
+		search.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredTickets.setPredicate(ticket -> {
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				String lowerCaseFilter = newValue.toLowerCase();
+				if (ticket.getName().toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				} 
 
-                return false;
-            });
-        });
-        VBox vbox = new VBox(20); // 10 is the spacing between the children
-        vbox.setPadding(new Insets(20, 50, 10, 50));
-        vbox.getStyleClass().add("background");
-        vbox.getChildren().addAll(search, table);
-        
-        return vbox;
+				return false;
+			});
+		});
+		VBox vbox = new VBox(20); // 10 is the spacing between the children
+		vbox.setPadding(new Insets(20, 50, 10, 50));
+		vbox.getStyleClass().add("background");
+		vbox.getChildren().addAll(search, table);
+
+		return vbox;
 	}
 
-	public void createTable() {
+	public void initializeTable() {
 		// TODO Auto-generated method stub
-	    TableColumn<Ticket, Integer> idCol = new TableColumn<>("ID");
+		TableColumn<Ticket, Integer> idCol = new TableColumn<>("ID");
 		TableColumn<Ticket,String>nameCol = new TableColumn<>("Name");
 		TableColumn<Ticket,String>dateCol = new TableColumn<>("Date");
 		TableColumn<Ticket,String>descriptionCol = new TableColumn<>("Description");
-	    TableColumn<Ticket, Integer> projectIdCol = new TableColumn<>("Project ID");
-	    TableColumn<Ticket,String> typeCol = new TableColumn<>("Type");
-	    nameCol.setPrefWidth(200);
-	    descriptionCol.setPrefWidth(288);
-	    projectIdCol.setPrefWidth(86);
-	    idCol.setCellValueFactory(
-	            new PropertyValueFactory<Ticket, Integer>("id") 
-	    );
+		TableColumn<Ticket, Integer> projectIdCol = new TableColumn<>("Project ID");
+		TableColumn<Ticket,String> typeCol = new TableColumn<>("Type");
+		TableColumn<Ticket, Void> actionsCol = new TableColumn<>("Actions");
+		nameCol.setPrefWidth(200);
+		descriptionCol.setPrefWidth(288);
+		projectIdCol.setPrefWidth(86);
+		idCol.setCellValueFactory(
+				new PropertyValueFactory<Ticket, Integer>("id") 
+				);
 		nameCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("Name")
 				);
@@ -88,21 +89,35 @@ public class TicketViewTable {
 		typeCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("ticketType")
 				);
-		
+		actionsCol.setCellFactory(param -> new ActionButton<>(
+				ticket -> {
+					ticdb.update(ticket);
+					table.refresh();
+				},
+				ticket -> {
+					ticdb.delete(ticket.getId());
+					table.refresh();
+				},
+				ticket -> {
+					//placeholder for comments
+				}
+				));
+
 		table.getColumns().add(idCol);
-        table.getColumns().add(nameCol);
-        table.getColumns().add(dateCol);
-        table.getColumns().add(descriptionCol);
-        table.getColumns().add(projectIdCol);
-        table.getColumns().add(typeCol);
-        tickets = FXCollections.observableArrayList(ticdb.getTickets());
-        filteredTickets = new FilteredList<>(tickets,p->true);
-        table.setPrefSize(700, 700);
-        
-        table.setItems(filteredTickets);
-        table.refresh();
+		table.getColumns().add(nameCol);
+		table.getColumns().add(dateCol);
+		table.getColumns().add(descriptionCol);
+		table.getColumns().add(projectIdCol);
+		table.getColumns().add(typeCol);
+		table.getColumns().add(actionsCol);
+		tickets = FXCollections.observableArrayList(ticdb.getAll());
+		filteredTickets = new FilteredList<>(tickets,p->true);
+		table.setPrefSize(700, 700);
+
+		table.setItems(filteredTickets);
+
 
 	}
-	
-	
+
+
 }

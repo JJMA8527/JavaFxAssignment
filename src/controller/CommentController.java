@@ -1,5 +1,6 @@
 package controller;
 
+import database.CommentDAO;
 import entities.Comment;
 import entities.Ticket;
 import javafx.scene.control.ComboBox;
@@ -11,55 +12,47 @@ import layout.CommentLayout;
 import layout.HomeLayout;
 import layout.TicketLayout;
 
-public class CommentController {
-	   private HomeLayout homeLayout;
+public class CommentController extends AbstractController {
 	   private CommentLayout commentLayout;
-	   private TicketLayout ticketLayout;
-	   private TicketController ticketController;
+	   private Ticket ticket;
+	   private CommentDAO commentdb;
 	
 	public CommentController(Stage primaryStage, HomeLayout homeLayout) {
 	    this.homeLayout = homeLayout;
+	    commentdb = new CommentDAO();
 	    commentLayout = new CommentLayout(primaryStage, this);
 
 	}
-	public void cancel() {
-		homeLayout.showHomePage();
 
-	}
-	
+	@Override
 	public void save() {
         //error display when user didn't enter required field
 		Comment comment = commentLayout.getComment();
-		ComboBox<Ticket> selectTicket = commentLayout.getTicket();
-		
+		//ComboBox<Ticket> selectTicket = commentLayout.getTicket();
+		ticket = commentLayout.getTicket().getSelectionModel().getSelectedItem();
 		
         if (!validField()) {
             return;
         }
         
+        int ticketId = ticket.getId();
+        comment.setTicketId(ticketId);
+        
+        int generatedId = commentdb.insert(comment);
+        comment.setId(generatedId);
+
         comment.setDescription("");
-        selectTicket.setValue(null);
+        //selectTicket.setValue(null);
 
 	}
+		
+	protected boolean validField() {
+	    TextArea commentDescriptionField = commentLayout.getCommentDescription();
+	    Label requiredField = commentLayout.getCommentDescriptionError();
+	    return validField(commentDescriptionField, requiredField);
+	}
+	
 
-    private boolean validField() {
-        boolean isFilled = true;
-        TextArea commentDescriptionField = commentLayout.getCommentDescription();
-        Label requiredField = commentLayout.getCommentDescriptionError();
-        
-        // Check if the ticketNameField is empty or null.
-        if (commentDescriptionField.getText().trim().isEmpty()) {
-            commentDescriptionField.getStyleClass().add("error-field");
-            requiredField.setText("Required");  // Set the error message.
-            requiredField.setVisible(true);
-            isFilled = false;
-        } else {
-            commentDescriptionField.getStyleClass().remove("error-field");
-            requiredField.setVisible(false);
-        }
-
-        return isFilled;
-    }
 	public void viewCommentsForTicket(int ticketId) {
 		
 	}

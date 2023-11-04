@@ -2,6 +2,9 @@ package application;
 	
 
 
+import database.CommentDAO;
+import database.ProjectDAO;
+import database.TicketDAO;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import layout.HomeLayout;
@@ -27,6 +30,18 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+		initializeDatabase();
 		launch(args);
 	}
+
+	private static void initializeDatabase() {
+		// TODO Auto-generated method stub
+        ProjectDAO projdb = new ProjectDAO();
+        TicketDAO tickdb = new TicketDAO();
+        CommentDAO commentdb = new CommentDAO();
+        projdb.createTable();
+        tickdb.createTable();
+        commentdb.createTable();
+	}
+	
 }
