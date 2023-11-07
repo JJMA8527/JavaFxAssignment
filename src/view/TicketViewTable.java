@@ -51,7 +51,7 @@ public class TicketViewTable {
 				return false;
 			});
 		});
-		VBox vbox = new VBox(20); // 10 is the spacing between the children
+		VBox vbox = new VBox(20);
 		vbox.setPadding(new Insets(20, 50, 10, 50));
 		vbox.getStyleClass().add("background");
 		vbox.getChildren().addAll(search, table);
@@ -99,7 +99,8 @@ public class TicketViewTable {
 					table.refresh();
 				},
 				ticket -> {
-					//placeholder for comments
+					CommentViewTable commentTable = new CommentViewTable(ticket.getId());
+			        commentTable.display();
 				}
 				));
 

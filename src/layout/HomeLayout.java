@@ -70,7 +70,6 @@ public class HomeLayout implements LayoutInterface {
         	showHomePage();
         });
         
-        //action performed when newProject button is clicked
         newProject.setOnAction(event -> {
             ProjectController projectControl = new ProjectController(homeStage,this);
             projectControl.displayProjectForm();
@@ -83,7 +82,6 @@ public class HomeLayout implements LayoutInterface {
         	CommentController commentControl = new CommentController(homeStage, this);
         	commentControl.displayCommentForm();
         });
-        //action opens new window 
         displayProjects.setOnAction(event ->{
         	ProjectViewTable projTable = new ProjectViewTable();
         	root.setCenter(projTable.getTableView());
@@ -111,7 +109,6 @@ public class HomeLayout implements LayoutInterface {
 	    root.setCenter(centerContainer);
 	    homeStage.setTitle("Home Page");
 	}
-	
 
     
 }

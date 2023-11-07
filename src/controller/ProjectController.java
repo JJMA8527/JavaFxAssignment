@@ -4,20 +4,11 @@
  */
 package controller;
 
-import java.time.LocalDate;
+
 
 import database.ProjectDAO;
 import entities.Project;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+
 import javafx.stage.Stage;
 import layout.HomeLayout;
 import layout.ProjectLayout;
@@ -48,25 +39,18 @@ public class ProjectController extends AbstractController {
 	public void save() {
 		Project project = projLayout.getProject();
 
-        if (!validField()) {
+        if (!projLayout.validateForm()) {
             return;
         }
         
         int generatedId = projdb.insert(project);
         project.setId(generatedId);
 	    
-	    //clear fields
-	    project.setName("");
-	    project.setDate(LocalDate.now());
-	    project.setDescription("");
+	    
+	    projLayout.clearForm();
         
 	}
 
-	protected boolean validField() {
-		TextField projNameField = projLayout.getProjName();
-		Label requiredField = projLayout.getProjNameError();
-		return validField(projNameField,requiredField);
-	}
 	
 	public void displayProjectForm() {
         homeLayout.getRoot().setCenter(projLayout.getRoot());

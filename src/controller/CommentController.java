@@ -26,14 +26,12 @@ public class CommentController extends AbstractController {
 
 	@Override
 	public void save() {
-        //error display when user didn't enter required field
 		Comment comment = commentLayout.getComment();
-		//ComboBox<Ticket> selectTicket = commentLayout.getTicket();
 		ticket = commentLayout.getTicket().getSelectionModel().getSelectedItem();
 		
-        if (!validField()) {
-            return;
-        }
+		if(!commentLayout.validateForm()) {
+			return;
+		}
         
         int ticketId = ticket.getId();
         comment.setTicketId(ticketId);
@@ -41,21 +39,11 @@ public class CommentController extends AbstractController {
         int generatedId = commentdb.insert(comment);
         comment.setId(generatedId);
 
-        comment.setDescription("");
-        //selectTicket.setValue(null);
+        commentLayout.clearForm();
 
 	}
-		
-	protected boolean validField() {
-	    TextArea commentDescriptionField = commentLayout.getCommentDescription();
-	    Label requiredField = commentLayout.getCommentDescriptionError();
-	    return validField(commentDescriptionField, requiredField);
-	}
+
 	
-
-	public void viewCommentsForTicket(int ticketId) {
-		
-	}
 	public void displayCommentForm() {
 	    homeLayout.getRoot().setCenter(commentLayout.getRoot());
 	}

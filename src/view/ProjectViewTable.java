@@ -47,7 +47,7 @@ public class ProjectViewTable {
                 return false;
             });
         });
-        VBox vbox = new VBox(20); // 10 is the spacing between the children
+        VBox vbox = new VBox(20);
         vbox.setPadding(new Insets(20, 50, 10, 50));
         vbox.getStyleClass().add("background");
         vbox.getChildren().addAll(search, table);
@@ -99,6 +99,8 @@ public class ProjectViewTable {
         table.setPrefSize(700, 700);
 
     }
+	
+	
 
 
 

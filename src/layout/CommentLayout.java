@@ -38,6 +38,7 @@ public class CommentLayout implements LayoutInterface {
 		this.commentControl = commentControl;
 		root = new VBox(20);
 		comment = new Comment("",LocalDateTime.now());
+		errorFields();
 		GenerateForm();
 
 	}
@@ -48,10 +49,9 @@ public class CommentLayout implements LayoutInterface {
 		root.getChildren().clear();
 		commentStage.setTitle("Comment Form");
 
-		HBox titleBox = new HBox(20);
-		Label title = new Label("Add Comment");
+		HBox ticketBox = new HBox(20);
+		//Label title = new Label("Add Comment");
 		//titleBox.setAlignment(Pos.CENTER);
-
 
 		//ticket box
 		Label selectTicket = new Label("Select Ticket:");
@@ -62,9 +62,7 @@ public class CommentLayout implements LayoutInterface {
 		descript = new TextArea();
 		descript.setPromptText("Enter information");
 		//Set the field as required. If user hasn't filled in field, error message becomes visible
-		commentDescriptionError = new Label("Required");
-		commentDescriptionError.setVisible(false);
-		commentDescriptionError.getStyleClass().add("error-label");
+
 
 		descript.textProperty().bindBidirectional(comment.descriptionProperty());
 
@@ -86,26 +84,16 @@ public class CommentLayout implements LayoutInterface {
 		cancelButton.setOnAction(event -> commentControl.cancel());
 
 		descriptionBox.getChildren().addAll(descript,commentDescriptionError);
-		titleBox.getChildren().addAll( selectTicket, ticketDropdown);
+		ticketBox.getChildren().addAll( selectTicket, ticketDropdown);
 		timeBox.getChildren().addAll(timestamp,timestampField); 
 		hbox.getChildren().addAll(cancelButton,saveButton);
-		root.getChildren().addAll(titleBox,description,descriptionBox,timeBox,hbox);
+		root.getChildren().addAll(ticketBox,description,descriptionBox,timeBox,hbox);
 
 	}
 	@Override
 	public VBox getRoot() {
 		// TODO Auto-generated method stub
 		return root;
-	}
-
-	public TextArea getCommentDescription() {
-		// TODO Auto-generated method stub
-		return descript;
-	}
-
-	public Label getCommentDescriptionError() {
-		// TODO Auto-generated method stub
-		return commentDescriptionError;
 	}
 
 	public Comment getComment() {
@@ -130,6 +118,13 @@ public class CommentLayout implements LayoutInterface {
 				return null;
 			}
 		});
+		if(!tickets.isEmpty()) {
+			selectTicket.getSelectionModel().selectFirst();
+		}
+		else {
+			selectTicket.setDisable(true);
+			selectTicket.setPromptText("No tickets available");
+		}
 
 		return selectTicket;
 	}
@@ -138,7 +133,32 @@ public class CommentLayout implements LayoutInterface {
 	public ComboBox<Ticket> getTicket() {
 		return selectTicket;
 	}
+	private void errorFields() {
+		// TODO Auto-generated method stub
+		commentDescriptionError = new Label("Required");
+		commentDescriptionError.setVisible(false);
+		commentDescriptionError.getStyleClass().add("error-label");
 
+	}
+	public boolean validateForm() {
+		boolean isValid = true;
+
+		if (descript.getText().trim().isEmpty()) {
+			commentDescriptionError.setVisible(true);
+			descript.getStyleClass().add("error-field");
+			isValid = false;
+		}
+		else {
+			commentDescriptionError.setVisible(false);
+			descript.getStyleClass().removeAll("error-field");
+		}
+
+		return isValid;
+	}
+
+	public void clearForm() {
+		descript.clear();
+	}
 
 
 }

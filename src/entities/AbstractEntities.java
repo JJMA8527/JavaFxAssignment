@@ -8,33 +8,34 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public abstract class AbstractEntities {
-    protected final StringProperty name;
-    protected final ObjectProperty<LocalDate> date;
+    protected StringProperty name;
+    protected ObjectProperty<LocalDate> date;
     protected final StringProperty description;
     protected int id;
-
+    
     public AbstractEntities(String name, LocalDate date, String description) {
         this.name = new SimpleStringProperty(name);
         this.date = new SimpleObjectProperty<>(date);
         this.description = new SimpleStringProperty(description);
-    }
-    //constructor with id
-    public AbstractEntities(int id, String name, LocalDate date, String description) {
-        this.id = id;
-        this.name = new SimpleStringProperty(name);
-        this.date = new SimpleObjectProperty<>(date);
-        this.description = new SimpleStringProperty(description);
-    }
-    
-    //constructor with no name, id (for comment)
-    public AbstractEntities(String description) {
-    	this.name = new SimpleStringProperty("");
-    	this.date = new SimpleObjectProperty<>(null);
-		this.description = new SimpleStringProperty(description);
-		
+        
     }
 
-    public StringProperty nameProperty() {
+	//constructor with id
+    public AbstractEntities(int id, String name, LocalDate date, String description) {
+    	this(name,date,description);
+        this.id = id;
+        /*this.name = new SimpleStringProperty(name);
+        this.date = new SimpleObjectProperty<>(date);
+        this.description = new SimpleStringProperty(description);*/
+    }
+    
+    //constructor with no name, date (for comment)
+    public AbstractEntities(String description) {
+		this.description = new SimpleStringProperty(description);
+    }
+
+
+	public StringProperty nameProperty() {
         return name;
     }
 

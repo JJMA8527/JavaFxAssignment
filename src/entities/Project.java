@@ -1,12 +1,8 @@
 package entities;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+
 
 import java.time.LocalDate;
-import java.util.HashMap;
 
 public class Project extends AbstractEntities {
 

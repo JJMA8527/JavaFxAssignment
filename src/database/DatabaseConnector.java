@@ -1,4 +1,4 @@
-/* Manage database interactions for the application. Establishes connection to database. 
+/* Manage database interaction for the application. Establishes connection to database.
  * 
  */
 package database;
@@ -18,7 +18,6 @@ import entities.Project;
 import entities.Ticket;
 
 public class DatabaseConnector {
-	// Establishes connection to database and returns connection object
     private static DatabaseConnector instance;
     private Connection conn;
 
@@ -30,7 +29,7 @@ public class DatabaseConnector {
 	     }
 	 }
 	 
-	 public static synchronized DatabaseConnector getInstance() {
+	 public static DatabaseConnector getInstance() {
 	     if (instance == null) {
 	         instance = new DatabaseConnector();
 	      }

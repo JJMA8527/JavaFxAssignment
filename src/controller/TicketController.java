@@ -20,7 +20,7 @@ public class TicketController extends AbstractController {
 	private TicketDAO ticdb;
 	private TicketLayout ticketLayout;
 	private Project project;
-	
+
 
 	public TicketController(Stage primaryStage, HomeLayout homeLayout) {
 		// TODO Auto-generated constructor stub
@@ -28,58 +28,33 @@ public class TicketController extends AbstractController {
 		ticdb = new TicketDAO();
 		ticketLayout = new TicketLayout(primaryStage,this);
 	}
-	
+
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-	    Ticket ticket = ticketLayout.getTicket();
-	    project = ticketLayout.getSelectProject().getSelectionModel().getSelectedItem();
+		Ticket ticket = ticketLayout.getTicket();
+		project = ticketLayout.getSelectProject().getSelectionModel().getSelectedItem();
 
-        if (!selectField(ticketLayout.getSelectProject())) {
-            return;
-        }
+		if(!ticketLayout.validateForm()) {
+			return;
+		}
 
-        //error display when user didn't enter required field
-        if (!validField()) {
-            return;
-        }
-        int projectId = project.getId();
-        String selectedType = ticketLayout.getSelectTicketType().getValue();
-        
-        ticket.setProjectId(projectId);
-        ticket.setTicketType(selectedType);
 
-        int generatedId = ticdb.insert(ticket);
-        ticket.setId(generatedId);
+		int projectId = project.getId();
+		String selectedType = ticketLayout.getSelectTicketType().getValue();
 
-        // clears field after saving project
-        ticket.setName("");
-        ticket.setDate(LocalDate.now());
-        ticket.setDescription("");
-	}
-	
-	protected boolean validField() {
-	    TextField ticketNameField = ticketLayout.getTicketName();
-	    Label requiredField = ticketLayout.getTicketNameError();
-	    return validField(ticketNameField, requiredField);
-	}
-	
-	private boolean selectField(ComboBox<Project> project) {
-		boolean isFilled = true;
-		Label requiredSelect = ticketLayout.getProjectErrorLabel();
+		ticket.setProjectId(projectId);
+		ticket.setTicketType(selectedType);
 
-	    if (project.getSelectionModel().isEmpty()) {
-	        requiredSelect.setVisible(true);
-	        isFilled = false;
-	    } else {
-	        requiredSelect.setVisible(false);
-	    }
-		return isFilled;
+		int generatedId = ticdb.insert(ticket);
+		ticket.setId(generatedId);
+
+		ticketLayout.clearForm();
 	}
 
-	
+
 	public void displayTicketForm() {
-	    homeLayout.getRoot().setCenter(ticketLayout.getRoot());
+		homeLayout.getRoot().setCenter(ticketLayout.getRoot());
 	}
 
 

@@ -1,5 +1,8 @@
 package view;
-
+/* Set up buttons for the action column in tableview. Serves as a gateway with user's interactions and 
+ * execution of defined actions (edit, delete) passed through Consumer interface
+ * 
+ */
 import java.util.function.Consumer;
 
 import javafx.scene.control.Button;
@@ -22,17 +25,18 @@ public class ActionButton<T> extends TableCell<T,Void> {
 		this.edit = edit;
 		this.delete = delete;
 
-		editBtn.setOnAction(event -> edit());
-		deleteBtn.setOnAction(event-> delete());
+		editBtn.setOnAction(event -> handleEdit());
+		deleteBtn.setOnAction(event-> handleDelete());
 		commentsBtn = null;
 	}
 	
+	//for the ticket table
 	public ActionButton(Consumer<T>edit,Consumer<T>delete,Consumer<T>comments) {
 		this(edit,delete);
 		this.comments = comments;
 		
 		commentsBtn = new Button("Comments");
-		commentsBtn.setOnAction(event->displayComments());
+		commentsBtn.setOnAction(event->handleComments());
 	}
 
 	@Override
@@ -50,16 +54,22 @@ public class ActionButton<T> extends TableCell<T,Void> {
 		}
 	}
 
-	private void delete() {
+	private void handleDelete() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void edit() {
+	private void handleEdit() {
 
 	}
-	private void displayComments() {
+	private void handleComments() {
 		// TODO Auto-generated method stub
+	    T currentItem = getCurrItem();
+        comments.accept(currentItem);
+	}
+	
+	private T getCurrItem() {
+		return getTableView().getItems().get(getIndex());
 	}
 
 }

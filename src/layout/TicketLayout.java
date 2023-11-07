@@ -23,102 +23,113 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 public class TicketLayout implements LayoutInterface {
-    private Stage ticketStage;
-    private TicketController ticketControl;
+	private Stage ticketStage;
+	private TicketController ticketControl;
 	private TextField ticketName;
 	private DatePicker date;
 	private TextArea descript;
 	private Label ticketNameError;
 	private ComboBox<Project> selectProject;
 	private ComboBox<String> selectType;
-	private Label selectProjectError;
-	
+
 	private VBox root;
 	private Ticket ticket;
-	
-    public TicketLayout(Stage ticketStage,TicketController ticketControl) {
-        this.ticketStage = ticketStage;
-        this.ticketControl = ticketControl;
-        ticket = new Ticket("", LocalDate.now(), "", "Bug");
 
-        root = new VBox(20);
-        GenerateForm();
-    }
+	public TicketLayout(Stage ticketStage,TicketController ticketControl) {
+		this.ticketStage = ticketStage;
+		this.ticketControl = ticketControl;
+		ticket = new Ticket("", LocalDate.now(), "", "Bug");
+		errorFields();
+		root = new VBox(20);
+		GenerateForm();
+	}
 
 	@Override
 	public void GenerateForm() {
 		// TODO Auto-generated method stub
-        VBox nameBox = new VBox(5); //spacing for the name field and error message
+		VBox nameBox = new VBox(5); //spacing for the name field and error message
 
-        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-        root.setAlignment(Pos.TOP_LEFT);
-        ticketStage.setTitle("Ticket Form");
-        
-        
-        Label projectLabel = new Label("Select Project:");
-        ComboBox<Project> projectDropdown = ProjectDropdown();
-        
-        selectProjectError = new Label("Please choose a project");
-        selectProjectError.getStyleClass().add("error-label");
-        selectProjectError.setVisible(false);
-        
-        HBox projectBox = new HBox(10); 
-        projectBox.getChildren().addAll(projectLabel, projectDropdown,selectProjectError);
-        
-        Label title = new Label("Enter Ticket Name: ");
-        ticketName = new TextField();
-        
-        ComboBox<String> typeDropdown = TypeDropdown();
-        
-        HBox ticketBox = new HBox(50); 
-        
-        //Set the field as required. If user hasn't filled in field, error message becomes visible
-        ticketNameError = new Label("Required");
-        ticketNameError.setVisible(false);
-        ticketNameError.getStyleClass().add("error-label");
+		root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+		root.setAlignment(Pos.TOP_LEFT);
+		ticketStage.setTitle("Ticket Form");
 
-        ticketName.setPromptText("Ticket name");
-        ticketName.setPrefWidth(500);
+		Label projectLabel = new Label("Select Project:");
+		ComboBox<Project> projectDropdown = ProjectDropdown();
 
-        Label dateSelect = new Label("Ticket's Starting Date");
-        date = new DatePicker(LocalDate.now());
+		HBox projectBox = new HBox(10); 
+		projectBox.getChildren().addAll(projectLabel, projectDropdown);
 
-        Label description = new Label("Description");
-        descript = new TextArea();
-        descript.setPromptText("Optional");
-        
-        ticketName.textProperty().bindBidirectional(ticket.nameProperty());
-        date.valueProperty().bindBidirectional(ticket.dateProperty());
-        descript.textProperty().bindBidirectional(ticket.descriptionProperty());
-        
-        
-        Button saveButton = new Button("Save");
-        saveButton.setOnAction(event -> ticketControl.save());
+		Label title = new Label("Enter Ticket Name: ");
+		ticketName = new TextField();
 
-        Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(event -> ticketControl.cancel()); 
-	    //horizontal layout for save/cancel buttons
-	    HBox hbox = new HBox(20);
-	    hbox.setAlignment(Pos.CENTER);
-	    
-        ticketBox.getChildren().addAll(ticketName, typeDropdown);
-	    nameBox.getChildren().addAll(ticketBox,ticketNameError);
-	    hbox.getChildren().addAll(cancelButton,saveButton);
-        root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript, hbox);
-		
+		ComboBox<String> typeDropdown = TypeDropdown();
+
+		HBox ticketBox = new HBox(50); 
+
+		ticketName.setPromptText("Ticket name");
+		ticketName.setPrefWidth(500);
+
+		Label dateSelect = new Label("Ticket's Starting Date");
+		date = new DatePicker(LocalDate.now());
+
+		Label description = new Label("Description");
+		descript = new TextArea();
+		descript.setPromptText("Optional");
+
+		ticketName.textProperty().bindBidirectional(ticket.nameProperty());
+		date.valueProperty().bindBidirectional(ticket.dateProperty());
+		descript.textProperty().bindBidirectional(ticket.descriptionProperty());
+
+
+		Button saveButton = new Button("Save");
+		saveButton.setOnAction(event -> ticketControl.save());
+
+		Button cancelButton = new Button("Cancel");
+		cancelButton.setOnAction(event -> ticketControl.cancel()); 
+		//horizontal layout for save/cancel buttons
+		HBox hbox = new HBox(20);
+		hbox.setAlignment(Pos.CENTER);
+
+		ticketBox.getChildren().addAll(ticketName, typeDropdown);
+		nameBox.getChildren().addAll(ticketBox,ticketNameError);
+		hbox.getChildren().addAll(cancelButton,saveButton);
+		root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript, hbox);
+
+	}
+	private void errorFields() {
+		// TODO Auto-generated method stub
+		ticketNameError = new Label("Required");
+		ticketNameError.setVisible(false);
+		ticketNameError.getStyleClass().add("error-label");
+
+	}
+	public boolean validateForm() {
+		boolean isValid = true;
+
+		if (ticketName.getText().trim().isEmpty()) {
+			ticketNameError.setVisible(true);
+			ticketName.getStyleClass().add("error-field");
+			isValid = false;
+		}
+		else {
+			ticketNameError.setVisible(false);
+			ticketName.getStyleClass().removeAll("error-field");
+		}
+
+		return isValid;
 	}
 	//ticket type dropdown
 	private ComboBox<String> TypeDropdown(){
 		selectType = new ComboBox<>();
-        selectType.getItems().addAll("Bug", "Enhancement");
-        selectType.setValue("Bug");
-        return selectType; 
+		selectType.getItems().addAll("Bug", "Enhancement");
+		selectType.setValue("Bug");
+		return selectType; 
 	}
 	//return the value in combobox for ticket type
 	public ComboBox<String> getSelectTicketType(){
 		return selectType;
 	}
-	
+
 	//project selection dropdown
 	private ComboBox<Project> ProjectDropdown() {
 		selectProject = new ComboBox<>();
@@ -126,43 +137,44 @@ public class TicketLayout implements LayoutInterface {
 		ProjectDAO projdb = new ProjectDAO();
 		ArrayList<Project>projects = projdb.getAll();
 		selectProject.getItems().addAll(projects);
-	    selectProject.setConverter(new StringConverter<Project>() {
-	        @Override
-	        public String toString(Project project) {
-	            return project.getName();
-	        }
-	        @Override
-	        public Project fromString(String string) {
-	            return null;
-	        }
-	    });
+		selectProject.setConverter(new StringConverter<Project>() {
+			@Override
+			public String toString(Project project) {
+				return project.getName();
+			}
+			@Override
+			public Project fromString(String string) {
+				return null;
+			}
+		});
+		//will check for available projects. disables combobox if none
+		if (!projects.isEmpty()) {
+			selectProject.getSelectionModel().selectFirst();
+		} else {
+			selectProject.setDisable(true);
+			selectProject.setPromptText("No projects available");
+		}
 
-	    return selectProject;
+		return selectProject;
 	}
-	
+
 	//return project user selected
 	public ComboBox<Project> getSelectProject() {
-	    return selectProject;
+		return selectProject;
 	}
-	
-	@Override
-    public VBox getRoot() {
-        return root;
-    }
-	
-	public TextField getTicketName() {
-	    return ticketName;
-	}
-	
-	public Label getTicketNameError() {
-	    return ticketNameError;
-	}
-    public Label getProjectErrorLabel() {
-        return selectProjectError;
-    }
 
-    public Ticket getTicket() {
-        return ticket;
-    }
+	@Override
+	public VBox getRoot() {
+		return root;
+	}
+
+	public Ticket getTicket() {
+		return ticket;
+	}
+	public void clearForm() {
+		ticket.setName("");
+		ticket.setDate(LocalDate.now());
+		ticket.setDescription("");
+	}
 
 }
