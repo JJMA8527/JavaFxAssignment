@@ -9,14 +9,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Ticket extends AbstractEntities {
-    private int projectId;
     private StringProperty ticketType;
+    private StringProperty projectName;
 
     // Constructor with id
-    public Ticket(int id,int projectId, String name, LocalDate date, String description,String ticketType) {
+    public Ticket(int id,String name,String projectName, LocalDate date, String description,String ticketType) {
     	super(id,name,date,description);
-    	this.projectId = projectId;
     	this.ticketType = new SimpleStringProperty(ticketType);
+    	this.projectName = new SimpleStringProperty(projectName);
     }
 
     //Constructor
@@ -24,14 +24,15 @@ public class Ticket extends AbstractEntities {
 		// TODO Auto-generated constructor stub
     	super(name,date,description);
     	this.ticketType = new SimpleStringProperty(ticketType);
+        this.projectName = new SimpleStringProperty("");
 	}
 
-    
-    public int getProjectId() {
-    	return projectId;
+    public String getProjectName() {
+        return projectName.get();
     }
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+
+    public void setProjectName(String projectName) {
+        this.projectName.set(projectName);
     }
     
     public String getTicketType() {

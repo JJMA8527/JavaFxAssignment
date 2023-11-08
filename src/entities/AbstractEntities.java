@@ -24,9 +24,6 @@ public abstract class AbstractEntities {
     public AbstractEntities(int id, String name, LocalDate date, String description) {
     	this(name,date,description);
         this.id = id;
-        /*this.name = new SimpleStringProperty(name);
-        this.date = new SimpleObjectProperty<>(date);
-        this.description = new SimpleStringProperty(description);*/
     }
     
     //constructor with no name, date (for comment)

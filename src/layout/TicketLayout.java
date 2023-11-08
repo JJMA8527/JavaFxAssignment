@@ -106,7 +106,7 @@ public class TicketLayout implements LayoutInterface {
 	public boolean validateForm() {
 		boolean isValid = true;
 
-		if (ticketName.getText().trim().isEmpty()) {
+		if (ticketName.getText().isEmpty()) {
 			ticketNameError.setVisible(true);
 			ticketName.getStyleClass().add("error-field");
 			isValid = false;

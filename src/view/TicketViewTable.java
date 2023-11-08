@@ -2,6 +2,8 @@ package view;
 
 
 
+import java.util.HashMap;
+
 import database.TicketDAO;
 import entities.Ticket;
 import javafx.collections.FXCollections;
@@ -17,36 +19,32 @@ import javafx.scene.layout.VBox;
 public class TicketViewTable {
 	private TableView<Ticket>table;
 	private TicketDAO ticdb;
-	private int projectId;
 	private ObservableList<Ticket>tickets;
 	private FilteredList<Ticket> filteredTickets;
 
-	//default constructor. no project id needed
+
 	public TicketViewTable() {
 		table = new TableView<>();
 		ticdb = new TicketDAO();
 		initializeTable();
 	}
-	//constructor with project id. for specific project 
-	public TicketViewTable(int projectId) {
-		table = new TableView<>();
-		ticdb = new TicketDAO();
-		this.projectId = projectId;
-		initializeTable();
-	}
 
 	public VBox getTableView() {
 		TextField search = new TextField();
-		search.setPromptText("Search by name");
+		search.setPromptText("Search by ticket name or project name");
 		search.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredTickets.setPredicate(ticket -> {
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
 				}
 				String lowerCaseFilter = newValue.toLowerCase();
+				String projectName = ticket.getProjectName();
 				if (ticket.getName().toLowerCase().contains(lowerCaseFilter)) {
 					return true;
-				} 
+				}
+				else if(projectName.toLowerCase().contains(lowerCaseFilter)) {
+					return true;
+				}
 
 				return false;
 			});
@@ -63,28 +61,28 @@ public class TicketViewTable {
 		// TODO Auto-generated method stub
 		TableColumn<Ticket, Integer> idCol = new TableColumn<>("ID");
 		TableColumn<Ticket,String>nameCol = new TableColumn<>("Name");
+		TableColumn<Ticket, String> projectNameCol = new TableColumn<>("Project Name");
 		TableColumn<Ticket,String>dateCol = new TableColumn<>("Date");
 		TableColumn<Ticket,String>descriptionCol = new TableColumn<>("Description");
-		TableColumn<Ticket, Integer> projectIdCol = new TableColumn<>("Project ID");
 		TableColumn<Ticket,String> typeCol = new TableColumn<>("Type");
 		TableColumn<Ticket, Void> actionsCol = new TableColumn<>("Actions");
 		nameCol.setPrefWidth(200);
 		descriptionCol.setPrefWidth(288);
-		projectIdCol.setPrefWidth(86);
+
 		idCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket, Integer>("id") 
 				);
 		nameCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("Name")
 				);
+		projectNameCol.setCellValueFactory(
+				new PropertyValueFactory<Ticket,String>("projectName")
+				);
 		dateCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("Date")
 				);
 		descriptionCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("Description")
-				);
-		projectIdCol.setCellValueFactory(
-				new PropertyValueFactory<Ticket,Integer>("projectId")
 				);
 		typeCol.setCellValueFactory(
 				new PropertyValueFactory<Ticket,String>("ticketType")
@@ -100,7 +98,7 @@ public class TicketViewTable {
 				},
 				ticket -> {
 					CommentViewTable commentTable = new CommentViewTable(ticket.getId());
-			        commentTable.display();
+					commentTable.display();
 				}
 				));
 
@@ -108,7 +106,7 @@ public class TicketViewTable {
 		table.getColumns().add(nameCol);
 		table.getColumns().add(dateCol);
 		table.getColumns().add(descriptionCol);
-		table.getColumns().add(projectIdCol);
+		table.getColumns().add(projectNameCol);
 		table.getColumns().add(typeCol);
 		table.getColumns().add(actionsCol);
 		tickets = FXCollections.observableArrayList(ticdb.getAll());

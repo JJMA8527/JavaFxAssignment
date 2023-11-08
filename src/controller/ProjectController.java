@@ -45,8 +45,7 @@ public class ProjectController extends AbstractController {
         
         int generatedId = projdb.insert(project);
         project.setId(generatedId);
-	    
-	    
+	    	    
 	    projLayout.clearForm();
         
 	}
