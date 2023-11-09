@@ -45,7 +45,6 @@ public class ProjectLayout implements LayoutInterface {
 	public void GenerateForm() {
 		VBox nameBox = new VBox(5); //spacing for the name field and error message
 
-		//projectScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 		root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 		root.setAlignment(Pos.TOP_LEFT);
 		projectStage.setTitle("Project Form");
@@ -80,6 +79,7 @@ public class ProjectLayout implements LayoutInterface {
 		nameBox.getChildren().addAll(projName,projNameError);
 		hbox.getChildren().addAll(cancelButton,saveButton);
 		root.getChildren().addAll(title, nameBox, dateSelect, date, description, descript, hbox);
+		root.getStyleClass().add("background");
 	}
 
 	private void errorFields() {
@@ -92,7 +92,7 @@ public class ProjectLayout implements LayoutInterface {
 	public boolean validateForm() {
 		boolean isValid = true;
 
-		if (projName.getText().trim().isEmpty()) {
+		if (projName.getText().isEmpty()) {
 			projNameError.setVisible(true);
 			projName.getStyleClass().add("error-field");
 			isValid = false;

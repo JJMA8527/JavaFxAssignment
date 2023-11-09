@@ -26,7 +26,9 @@
  * Customize font
  */
 #home_title {
-	
+	-fx-font-family: "Lucida Console";
+	-fx-font-weight: bold;
+	-fx-font-size: 30px; 
 }
 
 .link{

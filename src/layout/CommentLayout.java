@@ -50,10 +50,6 @@ public class CommentLayout implements LayoutInterface {
 		commentStage.setTitle("Comment Form");
 
 		HBox ticketBox = new HBox(20);
-		//Label title = new Label("Add Comment");
-		//titleBox.setAlignment(Pos.CENTER);
-
-		//ticket box
 		Label selectTicket = new Label("Select Ticket:");
 		ComboBox<Ticket> ticketDropdown = ticketDropdown();	
 
@@ -61,15 +57,12 @@ public class CommentLayout implements LayoutInterface {
 		Label description = new Label("Description");
 		descript = new TextArea();
 		descript.setPromptText("Enter information");
-		//Set the field as required. If user hasn't filled in field, error message becomes visible
-
-
 		descript.textProperty().bindBidirectional(comment.descriptionProperty());
 
 		HBox timeBox = new HBox(10);
 		Label timestamp = new Label("Date-Time");
 		TextField timestampField = new TextField();
-		//timestampField.setText(LocalDateTime.now().toString());
+		
 		timestampField.textProperty().bind(Bindings.createStringBinding(() -> 
 		comment.getTimestamp().toString(), comment.timestampProperty())
 				);
@@ -88,7 +81,7 @@ public class CommentLayout implements LayoutInterface {
 		timeBox.getChildren().addAll(timestamp,timestampField); 
 		hbox.getChildren().addAll(cancelButton,saveButton);
 		root.getChildren().addAll(ticketBox,description,descriptionBox,timeBox,hbox);
-
+		root.getStyleClass().add("background");
 	}
 	@Override
 	public VBox getRoot() {
@@ -143,7 +136,7 @@ public class CommentLayout implements LayoutInterface {
 	public boolean validateForm() {
 		boolean isValid = true;
 
-		if (descript.getText().trim().isEmpty()) {
+		if (descript.getText().isEmpty()) {
 			commentDescriptionError.setVisible(true);
 			descript.getStyleClass().add("error-field");
 			isValid = false;

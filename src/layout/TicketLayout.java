@@ -94,7 +94,7 @@ public class TicketLayout implements LayoutInterface {
 		nameBox.getChildren().addAll(ticketBox,ticketNameError);
 		hbox.getChildren().addAll(cancelButton,saveButton);
 		root.getChildren().addAll(projectBox,title, nameBox, dateSelect, date, description, descript, hbox);
-
+		root.getStyleClass().add("background");
 	}
 	private void errorFields() {
 		// TODO Auto-generated method stub

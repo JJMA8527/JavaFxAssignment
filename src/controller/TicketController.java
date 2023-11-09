@@ -1,7 +1,6 @@
 package controller;
 
 
-
 import database.TicketDAO;
 import entities.Project;
 import entities.Ticket;
