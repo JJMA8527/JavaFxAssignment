@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 public class Ticket extends AbstractEntities {
     private StringProperty ticketType;
     private StringProperty projectName;
-
+    
     // Constructor with id
     public Ticket(int id,String name,String projectName, LocalDate date, String description,String ticketType) {
     	super(id,name,date,description);
@@ -45,4 +45,5 @@ public class Ticket extends AbstractEntities {
     public StringProperty ticketTypeProperty() {
         return ticketType;
     }
+    
 }

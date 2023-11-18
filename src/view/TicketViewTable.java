@@ -15,6 +15,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import layout.DialogSetup;
 
 public class TicketViewTable {
 	private TableView<Ticket>table;
@@ -93,8 +94,12 @@ public class TicketViewTable {
 					table.refresh();
 				},
 				ticket -> {
-					ticdb.delete(ticket.getId());
-					table.refresh();
+					boolean confirm = DialogSetup.deleteConfirm();
+					if(confirm) {
+						ticdb.delete(ticket.getId());
+						tickets.remove(ticket);
+						table.refresh();
+					}
 				},
 				ticket -> {
 					CommentViewTable commentTable = new CommentViewTable(ticket.getId());
@@ -114,7 +119,7 @@ public class TicketViewTable {
 		table.setPrefSize(700, 700);
 
 		table.setItems(filteredTickets);
-
+		table.refresh();
 
 	}
 

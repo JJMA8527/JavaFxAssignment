@@ -15,29 +15,22 @@ public class ActionButton<T> extends TableCell<T,Void> {
 	private final Button deleteBtn;
 	private Button commentsBtn;
 
-	private final Consumer<T>edit;
-	private final Consumer<T>delete;
-    private Consumer<T> comments;
     
 	public ActionButton(Consumer<T>edit,Consumer<T>delete) {
 		editBtn = new Button("Edit");
 		deleteBtn = new Button("Delete");
 
-		this.edit = edit;
-		this.delete = delete;
-
-		editBtn.setOnAction(event -> handleEdit());
-		deleteBtn.setOnAction(event-> handleDelete());
+		editBtn.setOnAction(event -> edit.accept(getCurrItem()));
+		deleteBtn.setOnAction(event-> delete.accept(getCurrItem()));
 		commentsBtn = null;
 	}
 	
 	//for the ticket table
 	public ActionButton(Consumer<T>edit,Consumer<T>delete,Consumer<T>comments) {
 		this(edit,delete);
-		this.comments = comments;
 		
 		commentsBtn = new Button("Comments");
-		commentsBtn.setOnAction(event->handleComments());
+		commentsBtn.setOnAction(event->comments.accept(getCurrItem()));
 	}
 
 	@Override
@@ -55,20 +48,6 @@ public class ActionButton<T> extends TableCell<T,Void> {
 		}
 	}
 
-	private void handleDelete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void handleEdit() {
-		AbstractEntities currentItem = (AbstractEntities) getCurrItem();
-		//edit later
-	}
-	private void handleComments() {
-		// TODO Auto-generated method stub
-	    T currentItem = getCurrItem();
-        comments.accept(currentItem);
-	}
 	
 	private T getCurrItem() {
 		return getTableView().getItems().get(getIndex());

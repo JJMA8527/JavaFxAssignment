@@ -16,4 +16,5 @@ public interface GenericDAO<T> {
     ArrayList<T> getAll();
     void update(T entity);
     void delete(int id);
+
 }

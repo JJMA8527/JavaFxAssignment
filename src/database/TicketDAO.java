@@ -78,7 +78,6 @@ public class TicketDAO implements GenericDAO<Ticket> {
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int ticketId = rs.getInt("ticketId");
-				//int projectId = rs.getInt("projectId");
 				String name = rs.getString("name");
 				String projectName = rs.getString("projectName");
 				LocalDate date = LocalDate.parse(rs.getString("date"));
@@ -93,14 +92,57 @@ public class TicketDAO implements GenericDAO<Ticket> {
 		return tickets;
 	}
 	@Override
-	public void update(Ticket tic) {
+	public void update(Ticket ticket) {
 		// TODO Auto-generated method stub
+		String sql = "UPDATE tickets SET name = ?, projectName = ?, date = ?, description = ?, ticketType = ? WHERE ticketId = ?";
+		try {
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 
+			pstmt.setString(1, ticket.getName());
+			pstmt.setString(2, ticket.getProjectName());
+			pstmt.setString(3, ticket.getDate().toString());
+			pstmt.setString(4, ticket.getDescription());
+			pstmt.setString(5, ticket.getTicketType());
+			pstmt.setInt(6, ticket.getId());
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(int ticketId) {
 		// TODO Auto-generated method stub
+		String sql = "DELETE FROM tickets WHERE ticketId = ?";
+		try {
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, ticketId);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	/* Updates the project name column cells in ticket table.
+	 * Get the previous and updated name
+	 */
+	public void updateProjectNameForTickets(String oldName,String newProjectName) {
+		String sql = "UPDATE tickets SET projectName = ? WHERE projectName = ?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = db.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, newProjectName);
+			pstmt.setString(2,oldName);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 

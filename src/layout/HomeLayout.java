@@ -30,7 +30,7 @@ public class HomeLayout implements LayoutInterface {
     public HomeLayout(Stage homeStage) {
     	root = new BorderPane();
     	this.homeStage = homeStage;
-    	homeScene = new Scene(root,1000,700);
+    	homeScene = new Scene(root,1350,700);
     	GenerateForm();
     }
 

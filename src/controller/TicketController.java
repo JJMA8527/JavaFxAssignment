@@ -38,6 +38,7 @@ public class TicketController extends AbstractController {
 
 	    ticket.setProjectName(projectName); 
 		ticket.setTicketType(selectedType);
+		//ticket.setProjectId(project.getId());
 
 		int generatedId = ticdb.insert(ticket);
 		ticket.setId(generatedId);

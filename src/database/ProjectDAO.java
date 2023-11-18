@@ -106,9 +106,51 @@ public class ProjectDAO implements GenericDAO<Project> {
 		}
 
 	}
+	/* Delete project from database. Once deleted, tickets pertaining to the specific project are also deleted.
+	 * Comments of ticket are also deleted.
+	 * 
+	 */
 	@Override
 	public void delete(int id) {
 		// TODO Auto-generated method stub
+	    String projectFind = "SELECT name FROM projects WHERE id = ?";
+	    String deleteComments = "DELETE FROM comments WHERE ticketId IN (SELECT ticketId FROM tickets WHERE projectName = ?)";
+	    String deleteTickets = "DELETE FROM tickets WHERE projectName = ?";
+	    String deleteProject = "DELETE FROM projects WHERE id = ?";
+	    
+	    Connection conn = null;
+	    PreparedStatement pstmtProjectFind = null;
+	    PreparedStatement pstmtDeleteComments = null;
+	    PreparedStatement pstmtDeleteTickets = null;
+	    PreparedStatement pstmtDeleteProject = null;
+	    ResultSet rs = null;
+	    try {
+	        conn = db.getConnection();
+	        conn.setAutoCommit(false); 
 
+	        pstmtProjectFind = conn.prepareStatement(projectFind);
+	        pstmtProjectFind.setInt(1, id);
+	        rs = pstmtProjectFind.executeQuery();
+
+	        if (rs.next()) { 
+	            String projectName = rs.getString("name");
+
+	            pstmtDeleteComments = conn.prepareStatement(deleteComments);
+	            pstmtDeleteComments.setString(1, projectName);
+	            pstmtDeleteComments.executeUpdate();
+
+	            pstmtDeleteTickets = conn.prepareStatement(deleteTickets);
+	            pstmtDeleteTickets.setString(1, projectName);
+	            pstmtDeleteTickets.executeUpdate();
+
+	            pstmtDeleteProject = conn.prepareStatement(deleteProject);
+	            pstmtDeleteProject.setInt(1, id);
+	            pstmtDeleteProject.executeUpdate();
+
+	            conn.commit();
+	        }
+	    } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    }
 	}
 }

@@ -89,7 +89,7 @@ public class CommentDAO implements GenericDAO<Comment> {
 		}
 		return comments;
 	}
-	
+
 	public ArrayList<Comment> getAll(int ticketId) { 
 		String sql = "SELECT * FROM comments WHERE ticketId = ?";
 		ArrayList<Comment> comments = new ArrayList<>();
@@ -118,13 +118,35 @@ public class CommentDAO implements GenericDAO<Comment> {
 	@Override
 	public void update(Comment comment) {
 		// TODO Auto-generated method stub
-		
+		String sql = "UPDATE comments SET description = ?, date = ?, ticketId = ? WHERE commentId = ?";
+		try {
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql); 
+
+			pstmt.setString(1, comment.getDescription());
+			pstmt.setString(2, comment.getTimestamp().toString());
+			pstmt.setInt(3, comment.getTicketId());
+			pstmt.setInt(4, comment.getId());
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(int commentId) {
 		// TODO Auto-generated method stub
-		
+		String sql = "DELETE FROM comments WHERE commentId = ?";
+		try {
+			Connection conn = db.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, commentId);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }
