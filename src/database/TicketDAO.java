@@ -115,13 +115,18 @@ public class TicketDAO implements GenericDAO<Ticket> {
 	@Override
 	public void delete(int ticketId) {
 		// TODO Auto-generated method stub
-		String sql = "DELETE FROM tickets WHERE ticketId = ?";
+		String deleteTicket = "DELETE FROM tickets WHERE ticketId = ?";
+		String deleteComment = "DELETE FROM comments WHERE ticketId = ?";
 		try {
 			Connection conn = db.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql);
+			PreparedStatement pstmtDeleteTicket = conn.prepareStatement(deleteTicket);
+			pstmtDeleteTicket.setInt(1, ticketId);
+			pstmtDeleteTicket.executeUpdate();
+			
+			PreparedStatement pstmtDeleteComment = conn.prepareStatement(deleteComment);
+			pstmtDeleteComment.setInt(1, ticketId);
+			pstmtDeleteComment.executeUpdate();
 
-			pstmt.setInt(1, ticketId);
-			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
