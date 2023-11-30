@@ -37,5 +37,10 @@ public class Comment extends AbstractEntities {
     public void setTicketId(int ticketId) {
     	this.ticketId = ticketId;
     }
+
+	public void setTimestamp(LocalDateTime now) {
+		// TODO Auto-generated method stub
+		this.timestamp.set(now);
+	}
 }
 

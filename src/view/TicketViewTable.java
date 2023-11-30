@@ -89,10 +89,10 @@ public class TicketViewTable {
 				new PropertyValueFactory<Ticket,String>("ticketType")
 				);
 		actionsCol.setCellFactory(param -> new ActionButton<>(
-				ticket -> {
+				ticket -> DialogSetup.editDialog(ticket,updatedTicket -> {
 					ticdb.update(ticket);
 					table.refresh();
-				},
+				}),
 				ticket -> {
 					boolean confirm = DialogSetup.deleteConfirm();
 					if(confirm) {

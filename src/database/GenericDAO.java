@@ -1,9 +1,9 @@
 package database;
-/* CRUD operations:
+/* CRUD operations
+:
  * create a table in database
  * insert (create) object in database
  * getAll (read) retrieves all objects
- * implement later:
  * delete
  * update
  * 
