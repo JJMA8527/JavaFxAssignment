@@ -1,9 +1,11 @@
 package layout;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import database.ProjectDAO;
 import entities.Comment;
 import entities.Project;
 import entities.Ticket;
@@ -19,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 /* for the edit and delete options in table
  * Use Dialog for edit and Alert for delete
@@ -74,6 +77,27 @@ public class DialogSetup {
 		ComboBox<String>selectType = new ComboBox<>();
 		selectType.getItems().addAll("Bug", "Enhancement");
 		selectType.setValue(ticket.getTicketType());
+		
+		ComboBox<Project>selectProject = new ComboBox<>();
+		ProjectDAO projdb = new ProjectDAO();
+		ArrayList<Project>projects = projdb.getAll();
+		selectProject.getItems().addAll(projects);
+		selectProject.setConverter(new StringConverter<Project>() {
+			@Override
+			public String toString(Project project) {
+				return project.getName();
+			}
+			@Override
+			public Project fromString(String string) {
+				return null;
+			}
+		});
+		//get the associated project with ticket from list. uses stream to filter projects. set as default
+		Project projectName = projects.stream()
+				.filter(proj -> proj.getName().equals(ticket.getProjectName()))
+				.findAny()
+				.orElse(null);
+		selectProject.getSelectionModel().select(projectName);
 
 		VBox vbox = new VBox(10);
 		nameField = new TextField(ticket.getName());
@@ -84,18 +108,20 @@ public class DialogSetup {
 		date = new Label("Date");
 		description = new Label("Description");
 
-		vbox.getChildren().addAll(name, nameField, date, dateField, selectType, description, descriptionField);
+		vbox.getChildren().addAll(selectProject,name, nameField, date, dateField, selectType, description, descriptionField);
 
 		dialog.getDialogPane().setContent(vbox);
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
+		
 		dialog.setResultConverter(dialogBtn -> {
 			if(dialogBtn==ButtonType.OK) {
 				ticket.setName(nameField.getText());
 				ticket.setDate(dateField.getValue());
 				ticket.setDescription(descriptionField.getText());
 				ticket.setTicketType(selectType.getValue());
-
+				Project selectedProject = selectProject.getValue();
+				ticket.setProjectName(selectedProject.getName());
+				
 				return ticket;
 			}
 			return null;
